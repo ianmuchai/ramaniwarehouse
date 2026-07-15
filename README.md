@@ -2,6 +2,8 @@
 
 React + Vite storefront with an Express API for Ramani Warehouse.
 
+The Vite app now lives at the repository root so Vercel should not auto-select a `client` folder.
+
 ## Local Development
 
 From the project root:
@@ -24,21 +26,21 @@ Set a production admin key with `ADMIN_KEY`.
 
 ## Vercel Deployment
 
-This project is configured for Vercel from the repository root. Do not set the root directory to `client`; the root `vercel.json` is required for API, image, and refresh routing.
+Import the GitHub repository normally. Vercel should now detect the root Vite app.
 
 Use these Vercel settings if Vercel asks:
 
 | Setting | Value |
 | --- | --- |
-| Framework Preset | Other / Vite |
-| Root Directory | leave blank / repository root, NOT `client` |
+| Framework Preset | Vite |
+| Root Directory | leave blank / repository root |
 | Install Command | `npm install` |
 | Build Command | `npm run build` |
-| Output Directory | `client/dist` |
+| Output Directory | `dist` |
 
 The included `vercel.json` handles:
 
-- Vite build output from `client/dist`
+- Vite build output from `dist`
 - `/api/*` requests through the Express serverless entry
 - `/images/*` requests for uploaded/static images
 - SPA refresh fallback to `index.html`
@@ -74,23 +76,3 @@ Important: Vercel serverless functions do not provide permanent writable file st
 | Category carousel poster | 1200 x 720 px | 5:3 | Keep product/category focus inside the center 980 x 560 px area. |
 | Product card image | 900 x 720 px | 5:4 | Keep product fully visible inside the center 760 x 600 px area. |
 | Promo strip banner | 1600 x 560 px | 20:7 | Keep offer copy inside the center 1320 x 420 px area. |
-
-## GitHub Push
-
-If this folder is not already connected to GitHub:
-
-```powershell
-git init
-git add .
-git commit -m "Prepare Ramani Warehouse for Vercel deployment"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-git push -u origin main
-```
-
-If the remote already exists, replace the remote line with:
-
-```powershell
-git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-```
-
