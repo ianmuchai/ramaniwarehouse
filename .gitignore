@@ -1,0 +1,9 @@
+node_modules/
+client/dist/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+tmp-test.png
+.vercel/
