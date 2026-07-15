@@ -24,14 +24,14 @@ Set a production admin key with `ADMIN_KEY`.
 
 ## Vercel Deployment
 
-This project is configured for Vercel from the repository root.
+This project is configured for Vercel from the repository root. Do not set the root directory to `client`; the root `vercel.json` is required for API, image, and refresh routing.
 
 Use these Vercel settings if Vercel asks:
 
 | Setting | Value |
 | --- | --- |
 | Framework Preset | Other / Vite |
-| Root Directory | project root |
+| Root Directory | leave blank / repository root, NOT `client` |
 | Install Command | `npm install` |
 | Build Command | `npm run build` |
 | Output Directory | `client/dist` |
@@ -93,3 +93,4 @@ If the remote already exists, replace the remote line with:
 ```powershell
 git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
 ```
+
