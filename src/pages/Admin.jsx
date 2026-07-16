@@ -4,13 +4,13 @@ import { assetUrl } from '../utils/assets';
 const PHOTO_ACCEPT = 'image/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.svg,.bmp,.tif,.tiff,.heic,.heif,.jfif,.pjpeg,.pjp';
 
 const emptyForm = {
-  sku: '', name: '', price: '', category: 'Eco Boards', badge: 'New', stock: 'In stock', leadTime: '2-4 days', rating: '4.6', image: '', description: '', specs: '', gallery: ''
+  sku: '', name: '', price: '', category: 'Eco Board', badge: 'New', stock: 'In stock', leadTime: '2-4 days', rating: '4.6', image: '', description: '', specs: '', gallery: ''
 };
 
 function formFromProduct(product) {
   if (!product) return emptyForm;
   return {
-    sku: product.sku || '', name: product.name || '', price: product.price || '', category: product.category || 'Eco Boards', badge: product.badge || '', stock: product.stock || '', leadTime: product.leadTime || '', rating: product.rating || '4.6', image: product.image || '', description: product.description || '', specs: (product.specs || []).join(', '), gallery: (product.gallery || []).join(', ')
+    sku: product.sku || '', name: product.name || '', price: product.price || '', category: product.category || 'Eco Board', badge: product.badge || '', stock: product.stock || '', leadTime: product.leadTime || '', rating: product.rating || '4.6', image: product.image || '', description: product.description || '', specs: (product.specs || []).join(', '), gallery: (product.gallery || []).join(', ')
   };
 }
 
@@ -343,7 +343,7 @@ export default function Admin() {
 
 
       <section className="container admin-section-block">
-        <div className="admin-section-heading"><div><span className="eyebrow">Featured Collections Carousel</span><h2>Edit the category slides inside the hero card.</h2><p>This controls the rotating “Featured collection” slides and the category cards. These posters should be designed at {categorySpec?.pixels || '1200 x 720 px'}.</p></div></div>
+        <div className="admin-section-heading"><div><span className="eyebrow">Featured Collections Carousel</span><h2>Edit the category slides inside the hero card.</h2><p>This controls the rotating Featured collection slides and the category cards. These posters should be designed at {categorySpec?.pixels || '1200 x 720 px'}.</p></div></div>
         <div className="hero-admin-grid collection-admin-grid">
           <aside className="card-panel hero-slide-list">
             <h3>Collection slides</h3>
@@ -425,13 +425,3 @@ export default function Admin() {
     </main>
   );
 }
-
-
-
-
-
-
-
-
-
-

@@ -11,7 +11,7 @@ function slugify(value) {
 
 const fallbackProfile = {
   metrics: [
-    { value: '6+', label: 'Core categories' },
+    { value: '7+', label: 'Core categories' },
     { value: '24h', label: 'Quote response' },
     { value: 'KES', label: 'Local checkout' }
   ]
@@ -36,7 +36,7 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [heroSlides.length]);
 
-  const topCategories = useMemo(() => categories.slice(0, 6), [categories]);
+  const topCategories = useMemo(() => categories.slice(0, 7), [categories]);
 
   return (
     <main>
@@ -60,7 +60,7 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-shop-panel">
-            <div className="panel-topline"><span>Live collections</span><strong>{categories.length || 6}</strong></div>
+            <div className="panel-topline"><span>Live collections</span><strong>{categories.length || 7}</strong></div>
             <CategoryCarousel categories={categories} />
           </div>
         </div>

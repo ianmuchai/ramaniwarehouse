@@ -41,12 +41,13 @@ function slugify(value) {
 }
 
 const defaultCategories = [
-  { id: 'eco-boards', name: 'Eco Boards', tagline: 'Sustainable panels for partitions, fit-outs, and interiors.', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=80', color: '#f97316' },
+  { id: 'eco-boards', name: 'Eco Board', tagline: 'Sustainable panels for partitions, fit-outs, and interiors.', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1400&q=80', color: '#f97316' },
   { id: 'hdpe-plastics', name: 'HDPE Plastics', tagline: 'Reliable recycled plastic inputs for manufacturing and packaging.', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1400&q=80', color: '#0ea5e9' },
   { id: 'glass-recycling', name: 'Glass Recycling', tagline: 'Sorted glass supply for reuse, construction, and industrial projects.', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1400&q=80', color: '#14b8a6' },
   { id: 'ppr-pipes-fittings', name: 'PPR Pipes & Fittings', tagline: 'Durable plumbing systems for commercial and residential builds.', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1400&q=80', color: '#2563eb' },
   { id: 'interior-design', name: 'Interior Design', tagline: 'Curated finishes and fit-out packages for modern spaces.', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=80', color: '#a855f7' },
-  { id: 'cleaning-solutions', name: 'Detergent & Grease', tagline: 'Industrial cleaning products for hygiene-heavy environments.', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1400&q=80', color: '#22c55e' }];
+  { id: 'cleaning-solutions', name: 'Detergent & Grease', tagline: 'Industrial cleaning products for hygiene-heavy environments.', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1400&q=80', color: '#22c55e' },
+  { id: 'furniture', name: 'Furniture', tagline: 'Ready-made and custom furniture for homes, offices, hospitality, and commercial spaces.', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1400&q=80', color: '#8b5cf6' }];
 
 function loadCategories() {
   try {
@@ -66,7 +67,7 @@ function saveCategories() {
 let categories = loadCategories();
 
 const defaultProducts = [
-  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board Wall Panels', price: 18500, description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Boards', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board', price: 18500, description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Board', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
   { id: 2, sku: 'RW-HDP-032', name: 'HDPE Plastic Granules', price: 32000, description: 'Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.', category: 'HDPE Plastics', categoryId: 'hdpe-plastics', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', rating: 4.7, leadTime: '1-3 days', stock: 'Bulk ready', badge: 'Bulk supply', specs: ['Washed material', 'Manufacturing grade', 'Consistent batches'], gallery: ['https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1200&q=80'] },
   { id: 3, sku: 'RW-GLS-009', name: 'Sorted Glass Recycling Supply', price: 9800, description: 'Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.', category: 'Glass Recycling', categoryId: 'glass-recycling', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', rating: 4.6, leadTime: '3-5 days', stock: 'Available', badge: 'Eco choice', specs: ['Sorted batches', 'Project quantities', 'Reuse ready'], gallery: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=80'] },
   { id: 4, sku: 'RW-PPR-145', name: 'PPR Pipes & Fittings Kit', price: 14500, description: 'Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.', category: 'PPR Pipes & Fittings', categoryId: 'ppr-pipes-fittings', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', rating: 4.9, leadTime: 'Same week', stock: 'Fast moving', badge: 'Contractor pick', specs: ['Heat resistant', 'Low leakage fittings', 'Commercial grade'], gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80'] },
@@ -92,7 +93,7 @@ function saveProducts() {
 
 let products = loadProducts();
 const defaultHeroSlides = [
-  { id: 'contractor-marketplace', eyebrow: 'Modern sourcing marketplace', title: 'Shop project materials with warehouse-level confidence.', text: 'Eco boards, PPR fittings, recycled materials, cleaning supplies, and interior packages curated for serious projects.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1800&q=80', cta: 'Shop categories', href: '/categories' },
+  { id: 'contractor-marketplace', eyebrow: 'Modern sourcing marketplace', title: 'Shop project materials with warehouse-level confidence.', text: 'Eco Board, PPR fittings, recycled materials, cleaning supplies, and interior packages curated for serious projects.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1800&q=80', cta: 'Shop categories', href: '/categories' },
   { id: 'sustainable-supply', eyebrow: 'Sustainable supply chain', title: 'Industrial materials that look good and work hard.', text: 'Find products that support cleaner builds, practical timelines, and procurement teams that need speed.', image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', cta: 'Explore products', href: '/categories' },
   { id: 'fitout-ready', eyebrow: 'Fit-out and operations', title: 'From shell to showroom, source it in one place.', text: 'Materials, finishes, pipes, and maintenance essentials for contractors, retailers, hotels, and offices.', image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80', cta: 'Build a cart', href: '/checkout' }
 ];
@@ -125,7 +126,7 @@ const siteProfile = {
   phone: '+254 793 371994',
   email: 'info@ramaniwarehouse.com',
   metrics: [
-    { value: '6+', label: 'Core categories' },
+    { value: '7+', label: 'Core categories' },
     { value: '24h', label: 'Quote response' },
     { value: 'KES', label: 'Local checkout' }
   ]
@@ -411,14 +412,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-
-
-
-
-
-
-
-
-
-
-
