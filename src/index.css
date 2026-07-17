@@ -1796,3 +1796,22 @@ body {
     border-radius: 12px;
   }
 }
+
+.footer-logo-frame {
+  width: 62px;
+  height: 46px;
+  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.96);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+}
+
+.footer-brand strong {
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .footer-logo-frame {
+    width: 54px;
+    height: 42px;
+  }
+}

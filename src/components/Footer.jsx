@@ -6,7 +6,9 @@ export default function Footer() {
       <div className="footer-grid">
         <div>
           <a href="/" className="brand-mark footer-brand">
-            <span className="brand-symbol">RW</span>
+            <span className="brand-logo-frame footer-logo-frame">
+              <img src="/images/ramani-logo.svg" alt="" />
+            </span>
             <span>
               <strong>Ramani Warehouse</strong>
               <small>Built for serious sourcing</small>
