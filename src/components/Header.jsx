@@ -50,7 +50,9 @@ export default function Header() {
       <header className={scrolled ? 'site-header is-scrolled' : 'site-header'}>
         <div className="header-inner">
           <Link to="/" className="brand-mark" aria-label="Ramani Warehouse home">
-            <span className="brand-symbol">RW</span>
+            <span className="brand-logo-frame">
+              <img src="/images/ramani-logo.svg" alt="" />
+            </span>
             <span>
               <strong>Ramani Warehouse</strong>
               <small>Materials marketplace</small>

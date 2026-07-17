@@ -1767,3 +1767,32 @@ body {
   .trust-strip-section { padding-top: 20px; }
   .product-commerce-row { grid-template-columns: 1fr; }
 }
+
+/* Official Ramani logo mark from provided PDF */
+.brand-logo-frame {
+  width: 56px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(16,24,32,0.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 24px rgba(16,24,32,0.08);
+  overflow: hidden;
+}
+
+.brand-logo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 5px;
+}
+
+@media (max-width: 720px) {
+  .brand-logo-frame {
+    width: 48px;
+    height: 38px;
+    border-radius: 12px;
+  }
+}
