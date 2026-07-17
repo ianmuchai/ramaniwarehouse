@@ -61,10 +61,14 @@ export default function ProductList({ category, limit, products: providedProduct
             <div className="spec-row">
               {(product.specs || []).slice(0, 3).map((spec) => <span key={spec}>{spec}</span>)}
             </div>
+            <div className="product-commerce-row">
+              <span>{product.stock}</span>
+              <span>{product.leadTime}</span>
+            </div>
             <div className="product-footer">
               <div>
                 <strong>{formatKes(product.price)}</strong>
-                <small>{product.leadTime}</small>
+                <small>Project-ready pricing</small>
               </div>
             </div>
             <div className="product-card-actions">
@@ -77,6 +81,3 @@ export default function ProductList({ category, limit, products: providedProduct
     </div>
   );
 }
-
-
-

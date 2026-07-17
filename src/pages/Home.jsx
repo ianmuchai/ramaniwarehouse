@@ -73,6 +73,16 @@ export default function Home() {
         </div>
       </section>
 
+
+      <section className="section trust-strip-section">
+        <div className="trust-strip">
+          <span>Local sourcing support</span>
+          <span>Fast quote response</span>
+          <span>Editable product catalog</span>
+          <span>Checkout-ready orders</span>
+        </div>
+      </section>
+
       <section className="section category-strip-section categories-only-section">
         <div className="compact-section-title"><h2>Categories</h2></div>
         <div className="department-grid">
@@ -113,7 +123,3 @@ export default function Home() {
     </main>
   );
 }
-
-
-
-

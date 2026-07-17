@@ -27,6 +27,11 @@ export default function CategoryCarousel({ categories: providedCategories }) {
   if (!categories.length) return <div className="skeleton-card" />;
 
   const active = categories[activeIndex];
+  const nextCategory = categories[(activeIndex + 1) % categories.length];
+
+  function move(direction) {
+    setActiveIndex((current) => (current + direction + categories.length) % categories.length);
+  }
 
   return (
     <div className="category-carousel">
@@ -36,8 +41,14 @@ export default function CategoryCarousel({ categories: providedCategories }) {
           <span>Featured collection</span>
           <h3>{active.name}</h3>
           <p>{active.tagline}</p>
+          <strong>Explore collection</strong>
         </div>
       </Link>
+      <div className="carousel-controls">
+        <button type="button" onClick={() => move(-1)} aria-label="Previous collection">?</button>
+        <span>Next: {nextCategory?.name}</span>
+        <button type="button" onClick={() => move(1)} aria-label="Next collection">?</button>
+      </div>
       <div className="carousel-dots" aria-label="Category carousel controls">
         {categories.map((category, index) => (
           <button
@@ -52,6 +63,3 @@ export default function CategoryCarousel({ categories: providedCategories }) {
     </div>
   );
 }
-
-
-
