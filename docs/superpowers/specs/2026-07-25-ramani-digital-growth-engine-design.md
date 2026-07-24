@@ -21,7 +21,7 @@ The current architecture is suitable for a first-phase growth platform, but JSON
 
 ## Proposal Translation
 
-The source proposal was written for a roofing company. Ramani Warehouse will receive equivalent business capabilities instead of literal roofing features.
+The source proposal was written for a roofing company. Ramani Warehouse will receive equivalent business capabilities instead of literal roofing features. Every feature must be optimized around Ramani's actual catalog mix: Eco Boards, HDPE plastics, glass recycling/crafting inputs, PPR pipes and fittings, interior design/fit-out products, detergent and grease solutions, furniture, and future warehouse categories.
 
 | Proposal Deliverable | Ramani Warehouse Equivalent |
 | --- | --- |
@@ -31,7 +31,7 @@ The source proposal was written for a roofing company. Ramani Warehouse will rec
 | Filterable roofing catalog by gauge, color, application | Searchable/filterable Ramani catalog by category, use case, stock, lead time, price, specs, and project fit |
 | Dealer portal | Private operations portal for admin users and future fulfillment partners |
 | Installation guides and case studies | Resource hub for product guides, procurement advice, material use cases, fit-out ideas, cleaning/maintenance notes, and project examples |
-| Roof calculator | Project materials estimator and quote builder |
+| Calculator-style planning tool | Multi-category project materials estimator and quote builder for Ramani products |
 | Product comparison | Side-by-side comparison for Ramani products and categories |
 | Dealer locator | Fulfillment/contact locator for Ramani support points, partners, branches, suppliers, or delivery coverage |
 | AI chatbot, live chat, WhatsApp | Support widget with WhatsApp-first handoff, structured enquiry capture, and future AI/live-chat integration |
@@ -48,6 +48,8 @@ The platform must achieve four outcomes:
 2. Improve buyer confidence with richer product transparency, resource content, visible contact details, and practical proof points.
 3. Support operations by giving admins a single place to manage catalog content, resources, leads, quotes, partners, and metrics.
 4. Create a scalable technical foundation that can move from JSON files to database-backed CRM, analytics, auth, and persistent media storage.
+
+Every optimization should be judged by Ramani buying efficiency: a customer should reach the right category, product, bundle, quote path, or support contact with fewer decisions, less uncertainty, and no roofing-specific assumptions.
 
 ## Audience
 
@@ -134,7 +136,7 @@ The catalog should support:
 
 - Text search across name, SKU, description, category, and specs.
 - Category filter.
-- Use-case/project filter such as interiors, plumbing, cleaning, furniture, recycling, fit-out, maintenance, and bulk supply.
+- Use-case/project filter such as eco-board partitions, sustainable panels, glass craft/recycling, plumbing installation, cleaning operations, furniture sourcing, interior fit-out, maintenance, manufacturing input, and bulk supply.
 - Stock filter.
 - Lead-time filter.
 - Price range filter.
@@ -143,6 +145,8 @@ The catalog should support:
 - Clear empty state with quote/WhatsApp fallback.
 
 Category pages should include a short category overview, featured products, resource links, and quote CTA.
+
+Catalog optimization should avoid forcing every product into the same buying pattern. Standard stocked products can emphasize cart and checkout. Bulk, custom, service-heavy, or project-dependent products should emphasize quote request, WhatsApp handoff, and estimator inclusion.
 
 ### Product Detail
 
@@ -174,7 +178,7 @@ Comparison should be a public workflow, not just an admin tool:
 
 Estimator fields:
 
-- Project type: home, office, retail, hospitality, workshop, maintenance, construction, recycling, cleaning, furniture, custom.
+- Project type: home, office, retail, hospitality, workshop, maintenance, construction, recycling, glass craft, cleaning operations, furniture sourcing, interior fit-out, plumbing, custom.
 - Category interests: current Ramani categories.
 - Approximate quantity input: units, area, rooms, pieces, or "not sure".
 - Urgency: today, this week, this month, planning.
@@ -190,11 +194,23 @@ Estimator output:
 - Suggested products based on category and use-case tags.
 - Quantity assumptions clearly displayed.
 - Estimated subtotal when prices exist.
+- Quote-only and consult-first items clearly separated from checkout-ready items.
 - "Add suggested items to cart."
 - "Request formal quote."
 - "Continue on WhatsApp."
 
-Estimator rules should be simple and transparent in phase 1. They can rely on category matches, product tags/specs, and default quantity heuristics. The estimator must not claim engineering accuracy.
+Estimator rules should be simple and transparent in phase 1. They can rely on category matches, product tags/specs, and default quantity heuristics. The estimator must not claim engineering accuracy or imply one universal calculator fits every Ramani category.
+
+Category-aware estimator behavior:
+
+- Eco Boards: guide users by area, rooms, partition/wall/ceiling use, board quantity uncertainty, and quote follow-up.
+- HDPE Plastics: guide users by bulk quantity, manufacturing/crafting use, grade/spec needs, and batch availability.
+- Glass Recycling and Glass Crafting: guide users by intended use, sorted material needs, craft/project volume, safety/handling notes, and quote follow-up.
+- PPR Pipes and Fittings: guide users by plumbing project type, approximate run length, fitting needs, and consult-first validation.
+- Interior Design: guide users by space type, package interest, budget range, timeline, and consultation path.
+- Detergent and Grease Solutions: guide users by facility type, cleaning frequency, pack size, and repeat supply needs.
+- Furniture: guide users by room type, quantity, finish/customization, delivery area, and quote or checkout path.
+- Cross-category projects: allow mixed recommendations and make the generated list editable before quote submission.
 
 ### Quote Request
 
@@ -249,6 +265,8 @@ Resource records need:
 - Related products.
 
 Public resource pages should include quote and WhatsApp CTAs tied to the resource topic.
+
+Resource topics should be distributed across Ramani categories rather than concentrated in one product line. Initial content should include practical guidance for eco boards, glass/crafting or recycling, PPR fittings, interiors, cleaning operations, and furniture sourcing.
 
 ### Contact and Support
 
@@ -398,12 +416,19 @@ Products should support these fields:
 - `specs`
 - `useCases`
 - `tags`
+- `buyingMode`
+- `estimatorType`
+- `measurementUnit`
+- `projectTypes`
+- `supportNotes`
 - `minOrder`
 - `bulkAvailable`
 - `quoteOnly`
 - `featured`
 
 Existing product records should remain compatible when new fields are missing.
+
+`buyingMode` should support `checkout`, `quote`, and `consult`. This keeps the site efficient across very different Ramani products: a furniture item may be checkout-ready, bulk HDPE may be quote-led, and an interior package may be consult-first.
 
 ### Lead Record
 
@@ -571,7 +596,7 @@ Includes:
 - Catalog search/filter/sort.
 - Product comparison.
 - Product-page quote and WhatsApp CTAs.
-- Estimator UI with simple recommendations.
+- Category-aware estimator UI with simple recommendations across all current Ramani categories.
 - Resource hub public pages.
 - Contact/quote surfaces.
 - Client-side analytics event calls where useful.
@@ -625,7 +650,8 @@ Includes:
 
 These are intentionally deferred unless explicitly reprioritized:
 
-- Fully accurate engineering/material calculations.
+- Fully accurate engineering/material calculations for any category.
+- Category-specific professional design, plumbing, safety, or installation advice beyond clearly labelled estimates and quote guidance.
 - Real AI chatbot.
 - Real live chat agent console.
 - Multi-user authentication.
@@ -654,7 +680,7 @@ For Phase 1 and Phase 2, minimum acceptance checks:
 - Visitor can find and filter products.
 - Visitor can compare products.
 - Visitor can submit a quote request.
-- Visitor can complete estimator and submit it as a lead.
+- Visitor can complete a category-aware estimator flow for at least Eco Boards, glass/crafting or recycling, PPR, interiors, cleaning, furniture, and general custom sourcing, then submit it as a lead.
 - Visitor can open WhatsApp from a product or quote context.
 - Admin can view and update new leads.
 - Existing cart, checkout, product editing, category editing, hero editing, and image upload workflows remain functional.
@@ -664,6 +690,8 @@ For Phase 1 and Phase 2, minimum acceptance checks:
 The Ramani adaptation is successful when:
 
 - Every proposal deliverable has a visible Ramani-equivalent feature or an explicit phased implementation path.
+- Source-proposal-specific ideas have been translated into Ramani-specific buying workflows and do not appear as irrelevant category tools in the public product experience.
+- Eco Boards, glass/crafting or recycling, PPR, interiors, cleaning solutions, furniture, and future categories are supported through flexible product metadata, estimator logic, quote paths, and resource content.
 - The public site supports discovery, evaluation, enquiry, estimator, cart, and contact paths.
 - Admin users can manage more than storefront content: they can also follow up leads and understand performance.
 - The implementation avoids vague placeholders in public UI. Deferred features are framed as future phases in technical docs, not as empty public promises.
