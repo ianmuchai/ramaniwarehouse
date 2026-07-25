@@ -3,6 +3,14 @@ import { readFileSync } from 'node:fs';
 const checks = [
   {
     file: 'src/App.jsx',
+    patterns: ['<MobileActionBar />', 'mobile-shell-padding']
+  },
+  {
+    file: 'src/components/MobileActionBar.jsx',
+    patterns: ['mobile-action-bar', 'Shop', 'Estimate', 'WhatsApp', 'Cart']
+  },
+  {
+    file: 'src/App.jsx',
     patterns: ['className="skip-link"', 'id="main-content"']
   },
   {
@@ -47,7 +55,7 @@ const checks = [
   },
   {
     file: 'src/index.css',
-    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.home-hero-dark-filter', '.hero-market .hero-copy h1', 'rgba(0, 0, 0, 0.54)', '.home-hero-glass-fit', 'text-wrap: balance']
+    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.home-hero-dark-filter', '.hero-market .hero-copy h1', 'rgba(0, 0, 0, 0.54)', '.home-hero-glass-fit', 'text-wrap: balance', '/* Mobile UX optimization */', '.mobile-action-bar', '.mobile-shell-padding', '.mobile-filter-scroll', '.mobile-hero-stack', '.mobile-product-actions']
   }
 ];
 

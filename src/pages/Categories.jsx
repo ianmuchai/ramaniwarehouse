@@ -84,7 +84,7 @@ export default function Categories() {
           </div>
           <Link className="button secondary" to="/estimator">Start estimator</Link>
         </div>
-        <div className="catalog-controls" aria-label="Product filters">
+        <div className="catalog-controls mobile-filter-scroll" aria-label="Product filters">
           <label><span className="visually-hidden">Search all products</span><input type="search" autoComplete="off" value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder="Search products, specs, or project use" /></label>
           <label><span className="visually-hidden">Filter by stock</span><select value={filters.stock} onChange={(event) => setFilters({ ...filters, stock: event.target.value })}><option value="all">All stock</option><option value="in stock">In stock</option><option value="available">Available</option><option value="bulk">Bulk</option><option value="custom">Custom</option></select></label>
           <label><span className="visually-hidden">Filter by buying mode</span><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select></label>

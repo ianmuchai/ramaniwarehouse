@@ -81,7 +81,7 @@ export default function ProductList({ category, limit, products: providedProduct
                 <small>{product.buyingMode === 'consult' ? 'Consult-backed pricing' : 'Project-ready pricing'}</small>
               </div>
             </div>
-            <div className="product-card-actions">
+            <div className="product-card-actions mobile-product-actions">
               {product.buyingMode === 'consult' ? (
                 <Link className="button primary compact" to={`/product/${product.id}#product-quote`}>Request consult</Link>
               ) : (

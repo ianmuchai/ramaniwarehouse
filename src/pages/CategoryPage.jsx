@@ -62,7 +62,7 @@ export default function CategoryPage() {
       </section>
 
       <section className="section products-section category-products-only">
-        <div className="catalog-controls slim" aria-label="Category product filters">
+        <div className="catalog-controls slim mobile-filter-scroll" aria-label="Category product filters">
           <label><span className="visually-hidden">Search category products</span><input type="search" autoComplete="off" value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder={`Search ${category?.name || 'category'} products`} /></label>
           <label><span className="visually-hidden">Filter by buying mode</span><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select></label>
           <label><span className="visually-hidden">Sort products</span><select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="price-low">Price low to high</option><option value="price-high">Price high to low</option><option value="name">Name</option></select></label>

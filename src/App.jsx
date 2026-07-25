@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CompareTray from './components/CompareTray';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import MobileActionBar from './components/MobileActionBar';
 import Home from './pages/Home';
 import ProductPage from './components/ProductPage';
 import Categories from './pages/Categories';
@@ -23,7 +24,7 @@ export default function App() {
     <BrowserRouter>
       <CartProvider>
         <CompareProvider>
-          <div className="page-shell">
+          <div className="page-shell mobile-shell-padding">
             <a className="skip-link" href="#main-content">Skip to content</a>
             <Header />
             <div id="main-content">
@@ -43,6 +44,7 @@ export default function App() {
             </div>
             <CompareTray />
             <FloatingWhatsApp />
+            <MobileActionBar />
             <Footer />
           </div>
         </CompareProvider>

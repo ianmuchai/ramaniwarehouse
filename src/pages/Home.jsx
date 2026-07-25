@@ -49,7 +49,7 @@ export default function Home() {
         <div className="hero-bg" aria-hidden="true">
           {activeSlide?.image ? <img src={assetUrl(activeSlide.image)} alt="" /> : null}
         </div>
-        <div className="hero-content">
+        <div className="hero-content mobile-hero-stack">
           <div className="hero-copy">
             <span className="eyebrow">{activeSlide?.eyebrow || 'Ramani Warehouse'}</span>
             <h1>{activeSlide?.title || 'Shop project materials with warehouse-level confidence.'}</h1>
