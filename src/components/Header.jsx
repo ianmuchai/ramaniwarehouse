@@ -55,13 +55,13 @@ export default function Header() {
   return (
     <>
       <header className={scrolled ? 'site-header is-scrolled' : 'site-header'}>
-        <div className="header-inner">
+        <div className="header-inner mobile-compact-header">
           <Link to="/" className="brand-mark" aria-label="Ramani Warehouse home">
             <span className="brand-logo-frame">
               <img src="/images/ramani-logo.svg" alt="" />
             </span>
-            <span>
-              <strong>Ramani Warehouse</strong>
+            <span className="brand-copy mobile-brand-copy">
+              <strong className="brand-name mobile-brand-name"><span className="brand-name-main">Ramani</span><span className="brand-name-tail">Warehouse</span></strong>
               <small>Materials marketplace</small>
             </span>
           </Link>

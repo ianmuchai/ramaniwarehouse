@@ -3839,3 +3839,228 @@ textarea { resize: vertical; }
     width: min(280px, calc(100vw - 18px));
   }
 }
+
+/* Mobile brand and storefront polish */
+.brand-copy,
+.mobile-brand-copy {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.mobile-brand-name {
+  min-width: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.26em;
+  max-width: none;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.brand-name-main,
+.brand-name-tail {
+  display: inline-block;
+}
+
+@media (max-width: 760px) {
+  #main-content,
+  .page-shell {
+    overflow-x: clip;
+  }
+
+  .mobile-compact-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px auto;
+    align-items: center;
+    gap: 6px;
+    min-height: 56px;
+    padding: 7px;
+  }
+
+  .mobile-compact-header .brand-mark {
+    min-width: 0;
+    width: 100%;
+    gap: 7px;
+    overflow: hidden;
+  }
+
+  .mobile-compact-header .brand-logo-frame {
+    width: 40px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .mobile-brand-copy {
+    min-width: 0;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .mobile-brand-name,
+  .mobile-compact-header .brand-mark strong {
+    display: grid;
+    gap: 0;
+    max-width: 100%;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    line-height: 0.96;
+    letter-spacing: 0;
+  }
+
+  .brand-name-main {
+    color: #101820;
+    font-size: 0.95rem;
+    font-weight: 950;
+  }
+
+  .brand-name-tail {
+    margin-top: 1px;
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mobile-compact-header .brand-mark small {
+    display: none;
+  }
+
+  .mobile-compact-header .header-actions {
+    display: inline-flex;
+    justify-content: end;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .mobile-compact-header .menu-toggle,
+  .mobile-compact-header .pwa-install-button,
+  .mobile-compact-header .login-icon-button,
+  .mobile-compact-header .cart-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    border-radius: 12px;
+  }
+
+  .mobile-compact-header .cart-button {
+    padding: 0 5px;
+  }
+
+  .mobile-compact-header .cart-button strong {
+    width: 30px;
+    height: 30px;
+    font-size: 0.78rem;
+  }
+
+  .mobile-compact-header .install-icon,
+  .mobile-compact-header .admin-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .install-helper-card {
+    position: fixed;
+    top: 74px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+
+  .mobile-filter-scroll,
+  .catalog-controls,
+  .catalog-controls.slim {
+    scrollbar-width: none;
+  }
+
+  .mobile-filter-scroll::-webkit-scrollbar,
+  .catalog-controls::-webkit-scrollbar,
+  .catalog-controls.slim::-webkit-scrollbar {
+    display: none;
+  }
+
+  .button,
+  input,
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+
+  .section-heading h2,
+  .compact-section-title h2,
+  .page-hero h1,
+  .product-info-panel h1,
+  .estimator-section-heading h2,
+  .product-body h3,
+  .resource-card h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .page-hero.compact {
+    min-height: auto;
+  }
+
+  .project-start-grid a,
+  .resource-mini-grid a,
+  .product-card,
+  .resource-card,
+  .related-card,
+  .cart-line,
+  .estimator-step-panel,
+  .selected-track-panel,
+  .product-aware-summary {
+    box-shadow: 0 12px 30px rgba(16, 24, 32, 0.08);
+  }
+
+  .product-card-actions .button,
+  .mobile-product-actions .button,
+  .purchase-actions .button,
+  .checkout-form .button,
+  .contact-band-actions .button {
+    min-height: 48px;
+  }
+
+  .mobile-action-bar {
+    transform: translateZ(0);
+  }
+}
+
+@media (max-width: 380px) {
+  .mobile-compact-header {
+    grid-template-columns: minmax(0, 1fr) 40px auto;
+    gap: 5px;
+    padding: 6px;
+  }
+
+  .mobile-compact-header .brand-logo-frame {
+    width: 36px;
+    height: 30px;
+  }
+
+  .brand-name-main {
+    font-size: 0.86rem;
+  }
+
+  .brand-name-tail {
+    font-size: 0.61rem;
+    letter-spacing: 0.07em;
+  }
+
+  .mobile-compact-header .menu-toggle,
+  .mobile-compact-header .pwa-install-button,
+  .mobile-compact-header .login-icon-button,
+  .mobile-compact-header .cart-button {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .mobile-compact-header .header-actions {
+    gap: 4px;
+  }
+}
