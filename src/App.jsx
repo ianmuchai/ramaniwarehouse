@@ -24,8 +24,10 @@ export default function App() {
       <CartProvider>
         <CompareProvider>
           <div className="page-shell">
+            <a className="skip-link" href="#main-content">Skip to content</a>
             <Header />
-            <Routes>
+            <div id="main-content">
+              <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/categories" element={<Categories />} />
@@ -37,7 +39,8 @@ export default function App() {
               <Route path="/resources" element={<Resources />} />
               <Route path="/resources/:slug" element={<ResourceDetail />} />
               <Route path="/contact" element={<Contact />} />
-            </Routes>
+              </Routes>
+            </div>
             <CompareTray />
             <FloatingWhatsApp />
             <Footer />

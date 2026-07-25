@@ -24,7 +24,10 @@ export default function Home() {
   const [activeHero, setActiveHero] = useState(0);
 
   useEffect(() => {
-    axios.get('/api/site').then((res) => setSite(res.data || {})).catch(() => {});
+    axios.get('/api/site').then((res) => {
+      setSite(res.data || {});
+      setResources((res.data?.resources || []).slice(0, 3));
+    }).catch(() => {});
   }, []);
 
   const heroSlides = site.heroSlides || [];

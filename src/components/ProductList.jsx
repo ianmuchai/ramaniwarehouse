@@ -9,6 +9,12 @@ function formatKes(value) {
   return `KES ${Number(value || 0).toLocaleString()}`;
 }
 
+function modeLabel(mode) {
+  if (mode === 'consult') return 'Consult first';
+  if (mode === 'quote') return 'Quote-led';
+  return 'Checkout-ready';
+}
+
 export default function ProductList({ category, limit, products: providedProducts }) {
   const [remoteProducts, setRemoteProducts] = useState([]);
   const [loading, setLoading] = useState(!providedProducts);
@@ -37,6 +43,7 @@ export default function ProductList({ category, limit, products: providedProduct
   }, [category, limit, providedProducts, remoteProducts]);
 
   function addProduct(product) {
+    if (product.buyingMode === 'consult') return;
     add(product, 1);
     setAddedId(product.id);
     window.setTimeout(() => setAddedId(null), 1400);
@@ -50,7 +57,7 @@ export default function ProductList({ category, limit, products: providedProduct
       {visible.map((product) => (
         <article key={product.id} className="product-card">
           <Link to={`/product/${product.id}`} className="product-media" aria-label={`View ${product.name}`}>
-            <img src={assetUrl(product.image)} alt={product.name} loading="lazy" />
+            <img src={assetUrl(product.image)} alt={product.name} loading="lazy" decoding="async" />
             <span className="product-badge">{product.badge}</span>
           </Link>
           <div className="product-body">
@@ -66,15 +73,20 @@ export default function ProductList({ category, limit, products: providedProduct
             <div className="product-commerce-row">
               <span>{product.stock}</span>
               <span>{product.leadTime}</span>
+              <span className="buying-mode-chip">{modeLabel(product.buyingMode)}</span>
             </div>
             <div className="product-footer">
               <div>
                 <strong>{formatKes(product.price)}</strong>
-                <small>Project-ready pricing</small>
+                <small>{product.buyingMode === 'consult' ? 'Consult-backed pricing' : 'Project-ready pricing'}</small>
               </div>
             </div>
             <div className="product-card-actions">
-              <button className="button primary compact" type="button" onClick={() => addProduct(product)}>{addedId === product.id ? 'Added' : 'Add to cart'}</button>
+              {product.buyingMode === 'consult' ? (
+                <Link className="button primary compact" to={`/product/${product.id}#product-quote`}>Request consult</Link>
+              ) : (
+                <button className="button primary compact" type="button" onClick={() => addProduct(product)}>{addedId === product.id ? 'Added' : product.buyingMode === 'quote' ? 'Add for quote' : 'Add to cart'}</button>
+              )}
               <button className="button secondary compact" type="button" onClick={() => addCompare(product)}>{isCompared(product.id) ? 'Comparing' : 'Compare'}</button>
               <Link className="button secondary compact" to={`/product/${product.id}`}>View details</Link>
             </div>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 export default function Header() {
   const { itemsCount } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [adminCode, setAdminCode] = useState('');
   const [loginMessage, setLoginMessage] = useState('');
 
@@ -16,6 +18,10 @@ export default function Header() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   function openLogin() {
     setLoginOpen(true);
@@ -59,7 +65,13 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="nav" aria-label="Primary navigation">
+          <button className="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen((open) => !open)}>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+
+          <nav id="primary-navigation" className={menuOpen ? 'nav is-open' : 'nav'} aria-label="Primary navigation">
             <NavLink to="/" className="nav-link">Home</NavLink>
             <NavLink to="/categories" className="nav-link">Categories</NavLink>
             <NavLink to="/estimator" className="nav-link">Estimator</NavLink>
@@ -90,15 +102,14 @@ export default function Header() {
             <form className="admin-mini-form" onSubmit={enterAdmin}>
               <label>
                 Admin code
-                <input type="password" value={adminCode} onChange={(event) => setAdminCode(event.target.value)} placeholder="Private admin code" />
+                <input type="password" value={adminCode} onChange={(event) => setAdminCode(event.target.value)} placeholder="Private admin code" autoComplete="current-password" />
               </label>
               <button className="button primary" type="submit">Enter admin</button>
             </form>
-            {loginMessage ? <p className="status-text">{loginMessage}</p> : null}
+            {loginMessage ? <p className="status-text" role="status">{loginMessage}</p> : null}
           </div>
         </div>
       ) : null}
     </>
   );
 }
-

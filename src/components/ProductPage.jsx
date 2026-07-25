@@ -11,6 +11,12 @@ function formatKes(value) {
   return `KES ${Number(value || 0).toLocaleString()}`;
 }
 
+function buyingModeLabel(mode) {
+  if (mode === 'consult') return 'Consult first';
+  if (mode === 'quote') return 'Quote-led';
+  return 'Checkout-ready';
+}
+
 export default function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -34,11 +40,19 @@ export default function ProductPage() {
   const related = useMemo(() => products.filter((entry) => entry.category === product?.category && entry.id !== product?.id).slice(0, 3), [products, product]);
 
   function addToCart() {
+    if (product?.buyingMode === 'consult') {
+      setMessage('This item needs a consult before cart checkout. Send a project brief below.');
+      return;
+    }
     add(product, qty);
     setMessage(`${qty} item${qty > 1 ? 's' : ''} added to cart.`);
   }
 
   function buyNow() {
+    if (product?.buyingMode === 'consult') {
+      setMessage('This item needs a consult before checkout. Send a project brief below.');
+      return;
+    }
     add(product, qty);
     navigate('/checkout');
   }
@@ -46,13 +60,16 @@ export default function ProductPage() {
   if (loading) return <main className="container"><div className="loading-card">Loading product...</div></main>;
   if (!product) return <main className="container"><div className="loading-card">Product not found.</div></main>;
 
+  const isConsultFirst = product.buyingMode === 'consult';
+  const isQuoteLed = product.buyingMode === 'quote' || product.quoteOnly;
+
   return (
     <main className="product-detail-page">
       <section className="product-hero container">
         <div className="product-gallery">
-          <img className="main-product-image" src={assetUrl(product.image)} alt={product.name} />
+          <img className="main-product-image" src={assetUrl(product.image)} alt={product.name} loading="eager" decoding="async" />
           <div className="gallery-strip">
-            {(product.gallery || [product.image]).map((image) => <img key={image} src={assetUrl(image)} alt="" />)}
+            {(product.gallery || [product.image]).map((image) => <img key={image} src={assetUrl(image)} alt="" loading="lazy" decoding="async" />)}
           </div>
         </div>
         <div className="product-info-panel">
@@ -64,6 +81,7 @@ export default function ProductPage() {
             <span>{product.rating} rating</span>
             <span>{product.stock}</span>
             <span>{product.leadTime}</span>
+            <span className="buying-mode-pill">{buyingModeLabel(product.buyingMode)}</span>
           </div>
           <div className="spec-row detail">
             {(product.specs || []).map((spec) => <span key={spec}>{spec}</span>)}
@@ -74,26 +92,33 @@ export default function ProductPage() {
           {product.supportNotes ? <p className="support-note">{product.supportNotes}</p> : null}
           <div className="purchase-box">
             <div>
-              <small>Price</small>
+              <small>{isConsultFirst ? 'Indicative price' : 'Price'}</small>
               <strong>{formatKes(product.price)}</strong>
             </div>
             <div className="qty-stepper" aria-label="Quantity selector">
-              <button type="button" onClick={() => setQty(Math.max(1, qty - 1))}>-</button>
+              <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity">-</button>
               <span>{qty}</span>
-              <button type="button" onClick={() => setQty(qty + 1)}>+</button>
+              <button type="button" onClick={() => setQty(qty + 1)} aria-label="Increase quantity">+</button>
             </div>
             <div className="purchase-actions">
-              <button className="button primary" type="button" onClick={buyNow}>Buy now</button>
-              <button className="button secondary" type="button" onClick={addToCart}>Add to cart</button>
+              {isConsultFirst ? (
+                <a className="button primary" href="#product-quote">Request consult</a>
+              ) : (
+                <>
+                  <button className="button primary" type="button" onClick={buyNow}>{isQuoteLed ? 'Start quote cart' : 'Buy now'}</button>
+                  <button className="button secondary" type="button" onClick={addToCart}>{isQuoteLed ? 'Add for quote' : 'Add to cart'}</button>
+                </>
+              )}
+              <a className="button secondary" href="#product-quote">{isConsultFirst ? 'Project brief' : 'Request quote'}</a>
               <button className="button secondary" type="button" onClick={() => addCompare(product)}>Compare</button>
               <a className="button glass" href={whatsappUrl({ text: `Hello Ramani Warehouse, I am interested in ${product.name} (${product.sku}).` })} target="_blank" rel="noreferrer">WhatsApp</a>
             </div>
-            {message ? <p className="status-text">{message}</p> : null}
+            {message ? <p className="status-text" role="status" aria-live="polite">{message}</p> : null}
           </div>
         </div>
       </section>
 
-      <section className="section product-quote-section">
+      <section className="section product-quote-section" id="product-quote">
         <div className="container product-quote-panel card-panel">
           <div>
             <span className="eyebrow">Project quote</span>
@@ -116,7 +141,7 @@ export default function ProductPage() {
           <div className="related-grid">
             {related.map((entry) => (
               <Link key={entry.id} to={`/product/${entry.id}`} className="related-card">
-                <img src={assetUrl(entry.image)} alt={entry.name} />
+                <img src={assetUrl(entry.image)} alt={entry.name} loading="lazy" decoding="async" />
                 <strong>{entry.name}</strong>
                 <span>{formatKes(entry.price)}</span>
               </Link>
@@ -127,6 +152,3 @@ export default function ProductPage() {
     </main>
   );
 }
-
-
-

@@ -24,7 +24,7 @@ export default function Checkout() {
     }
 
     setSubmitting(true);
-    setMessage('Preparing your order...');
+    setMessage('Preparing your order request...');
 
     try {
       const res = await fetch('/api/checkout', {
@@ -58,14 +58,20 @@ export default function Checkout() {
       </section>
 
       <section className="container checkout-grid">
-        <form className="checkout-form card-panel" onSubmit={submit}>
-          <h2>Delivery details</h2>
-          <label>Full name<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
-          <label>Email<input type="email" required value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label>
-          <label>Phone<input value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label>
-          <label>Delivery address<textarea required rows="4" value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} /></label>
-          <button className="button primary" type="submit" disabled={submitting}>{submitting ? 'Sending...' : 'Proceed to pay'}</button>
-          {message ? <p className="status-text">{message}</p> : null}
+        <form className="checkout-form card-panel" onSubmit={submit} aria-busy={submitting}>
+          <h2>Guest checkout</h2>
+          <p className="form-helper">No account required. Ramani uses these details to confirm delivery, availability, and fulfillment.</p>
+          <label>Full name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
+          <label>Email<input type="email" required autoComplete="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label>
+          <label>Phone<input type="tel" inputMode="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label>
+          <label>Delivery address<textarea required rows="4" autoComplete="shipping street-address" value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} /></label>
+          <div className="checkout-assurance" aria-label="Checkout assurances">
+            <span>No account required</span>
+            <span>Delivery confirmed by staff</span>
+            <span>Quote support available</span>
+          </div>
+          <button className="button primary" type="submit" disabled={submitting}>{submitting ? 'Sending...' : 'Send order request'}</button>
+          {message ? <p className="status-text" role="status" aria-live="polite">{message}</p> : null}
         </form>
 
         <aside className="order-summary card-panel">
@@ -77,15 +83,15 @@ export default function Checkout() {
               <div className="cart-lines">
                 {cart.map((item) => (
                   <div key={item.id} className="cart-line">
-                    <img src={assetUrl(item.image)} alt="" />
+                    <img src={assetUrl(item.image)} alt="" loading="lazy" decoding="async" />
                     <div>
                       <strong>{item.name}</strong>
                       <span>{formatKes(item.price)} x {item.quantity}</span>
                     </div>
-                    <div className="qty-controls">
-                      <button type="button" onClick={() => update(item.id, item.quantity - 1)}>-</button>
+                    <div className="qty-controls" aria-label={`Quantity controls for ${item.name}`}>
+                      <button type="button" onClick={() => update(item.id, item.quantity - 1)} aria-label={`Decrease ${item.name} quantity`}>-</button>
                       <span>{item.quantity}</span>
-                      <button type="button" onClick={() => update(item.id, item.quantity + 1)}>+</button>
+                      <button type="button" onClick={() => update(item.id, item.quantity + 1)} aria-label={`Increase ${item.name} quantity`}>+</button>
                     </div>
                   </div>
                 ))}
@@ -102,4 +108,3 @@ export default function Checkout() {
     </main>
   );
 }
-

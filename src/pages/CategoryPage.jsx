@@ -4,6 +4,8 @@ import axios from 'axios';
 import { assetUrl } from '../utils/assets';
 import ProductList from '../components/ProductList';
 
+const defaultFilters = { query: '', buyingMode: 'all', sort: 'featured' };
+
 function slugify(value) {
   return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
@@ -16,7 +18,7 @@ export default function CategoryPage() {
   const { slug } = useParams();
   const [site, setSite] = useState({ categories: [], products: [] });
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ query: '', buyingMode: 'all', sort: 'featured' });
+  const [filters, setFilters] = useState(defaultFilters);
 
   useEffect(() => {
     axios.get('/api/site')
@@ -39,13 +41,18 @@ export default function CategoryPage() {
       return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
     });
   }, [products, filters]);
+  const hasActiveFilters = filters.query || filters.buyingMode !== 'all' || filters.sort !== 'featured';
+
+  function clearFilters() {
+    setFilters({ ...defaultFilters });
+  }
 
   if (loading) return <main className="container"><div className="loading-card">Loading category...</div></main>;
 
   return (
     <main>
       <section className="page-hero category-detail-hero" style={{ '--accent': category?.color || '#f97316' }}>
-        <div className="page-hero-bg">{category?.image ? <img src={assetUrl(category.image)} alt="" /> : null}</div>
+        <div className="page-hero-bg">{category?.image ? <img src={assetUrl(category.image)} alt="" loading="eager" decoding="async" /> : null}</div>
         <div className="container page-hero-content">
           <span className="eyebrow">Category</span>
           <h1>{category?.name || 'Category'}</h1>
@@ -55,7 +62,15 @@ export default function CategoryPage() {
       </section>
 
       <section className="section products-section category-products-only">
-        <div className="catalog-controls slim"><input value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder={`Search ${category?.name || 'category'} products`} /><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select><select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="price-low">Price low to high</option><option value="price-high">Price high to low</option><option value="name">Name</option></select></div>
+        <div className="catalog-controls slim" aria-label="Category product filters">
+          <label><span className="visually-hidden">Search category products</span><input type="search" autoComplete="off" value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder={`Search ${category?.name || 'category'} products`} /></label>
+          <label><span className="visually-hidden">Filter by buying mode</span><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select></label>
+          <label><span className="visually-hidden">Sort products</span><select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="price-low">Price low to high</option><option value="price-high">Price high to low</option><option value="name">Name</option></select></label>
+        </div>
+        <div className="catalog-result-bar">
+          <p role="status" aria-live="polite">Showing {filteredProducts.length} of {products.length} {category?.name || 'category'} products</p>
+          {hasActiveFilters ? <button className="button secondary compact" type="button" onClick={clearFilters}>Clear filters</button> : null}
+        </div>
         {filteredProducts.length ? <ProductList products={filteredProducts} /> : <div className="empty-cart"><p>No products match this category filter.</p><Link className="button primary" to="/contact">Request sourcing help</Link></div>}
       </section>
     </main>

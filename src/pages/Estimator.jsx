@@ -102,20 +102,20 @@ export default function Estimator() {
       </section>
 
       <section className="container estimator-grid">
-        <form className="card-panel estimator-form" onSubmit={submit}>
+        <form className="card-panel estimator-form" onSubmit={submit} aria-busy={submitting}>
           <h2>Project details</h2>
           <label>Project type<select value={input.projectType} onChange={(event) => setInput({ ...input, projectType: event.target.value })}>{projectTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></label>
           <div className="category-choice-grid">
             {(site.categories || []).map((category) => <label key={category.id}><input type="checkbox" checked={input.categories.includes(category.name)} onChange={() => toggleCategory(category.name)} />{category.name}</label>)}
           </div>
-          <label>Approximate quantity or area<input value={input.quantity} onChange={(event) => setInput({ ...input, quantity: event.target.value })} placeholder="e.g. 4 rooms, 20 packs, 200kg, not sure" /></label>
-          <div className="quote-grid"><label>Urgency<select value={input.urgency} onChange={(event) => setInput({ ...input, urgency: event.target.value })}>{urgencies.map((urgency) => <option key={urgency} value={urgency}>{urgency}</option>)}</select></label><label>Delivery area<input value={input.location} onChange={(event) => setInput({ ...input, location: event.target.value })} /></label></div>
-          <label>Budget range<input value={input.budget} onChange={(event) => setInput({ ...input, budget: event.target.value })} /></label>
+          <label>Approximate quantity or area<input autoComplete="off" value={input.quantity} onChange={(event) => setInput({ ...input, quantity: event.target.value })} placeholder="e.g. 4 rooms, 20 packs, 200kg, not sure" /></label>
+          <div className="quote-grid"><label>Urgency<select value={input.urgency} onChange={(event) => setInput({ ...input, urgency: event.target.value })}>{urgencies.map((urgency) => <option key={urgency} value={urgency}>{urgency}</option>)}</select></label><label>Delivery area<input autoComplete="shipping address-level2" value={input.location} onChange={(event) => setInput({ ...input, location: event.target.value })} /></label></div>
+          <label>Budget range<input inputMode="text" autoComplete="off" value={input.budget} onChange={(event) => setInput({ ...input, budget: event.target.value })} /></label>
           <label>Notes<textarea rows="4" value={input.notes} onChange={(event) => setInput({ ...input, notes: event.target.value })} /></label>
           <h2>Follow-up details</h2>
-          <div className="quote-grid"><label>Name<input required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label><label>Phone<input required value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label><label>Email<input type="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label><label>Preferred contact<select value={preferredContact} onChange={(event) => setPreferredContact(event.target.value)}><option value="whatsapp">WhatsApp</option><option value="call">Call</option><option value="email">Email</option></select></label></div>
+          <div className="quote-grid"><label>Name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label><label>Phone<input required type="tel" inputMode="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label><label>Email<input type="email" autoComplete="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label><label>Preferred contact<select value={preferredContact} onChange={(event) => setPreferredContact(event.target.value)}><option value="whatsapp">WhatsApp</option><option value="call">Call</option><option value="email">Email</option></select></label></div>
           <button className="button primary" type="submit" disabled={submitting}>{submitting ? 'Sending...' : 'Request formal quote'}</button>
-          {message ? <p className="status-text">{message}</p> : null}
+          {message ? <p className="status-text" role="status" aria-live="polite">{message}</p> : null}
         </form>
 
         <aside className="card-panel recommendation-panel">
@@ -123,10 +123,10 @@ export default function Estimator() {
           <h2>{recommendation.length ? `${recommendation.length} matched products` : 'Choose categories to begin'}</h2>
           <p>This is a planning aid. Ramani will confirm final quantities, compatibility, stock, and quote details.</p>
           <div className="recommendation-list">
-            {recommendation.map((product) => <article key={product.id}><img src={assetUrl(product.image)} alt="" /><div><strong>{product.name}</strong><span>{modeLabel(product.buyingMode)} | {product.measurementUnit}</span><small>{product.supportNotes}</small></div><b>{formatKes(product.price)}</b></article>)}
+            {recommendation.map((product) => <article key={product.id}><img src={assetUrl(product.image)} alt="" loading="lazy" decoding="async" /><div><strong>{product.name}</strong><span>{modeLabel(product.buyingMode)} | {product.measurementUnit}</span><small>{product.supportNotes}</small></div><b>{formatKes(product.price)}</b></article>)}
           </div>
           {recommendation.length ? <div className="quote-actions"><button className="button secondary" type="button" onClick={addRecommendedToCart}>Add suitable items to cart</button><a className="button glass" href={whatsappUrl({ text: whatsappText })} target="_blank" rel="noreferrer">Continue on WhatsApp</a></div> : <Link className="button secondary" to="/categories">Browse categories</Link>}
-          {submitted ? <p className="status-text">Saved as a Ramani lead for follow-up.</p> : null}
+          {submitted ? <p className="status-text" role="status" aria-live="polite">Saved as a Ramani lead for follow-up.</p> : null}
         </aside>
       </section>
     </main>
