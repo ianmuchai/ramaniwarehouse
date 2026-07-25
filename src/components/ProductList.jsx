@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { assetUrl } from '../utils/assets';
 import { useCart } from '../context/CartContext';
+import { useCompare } from '../context/CompareContext';
 
 function formatKes(value) {
   return `KES ${Number(value || 0).toLocaleString()}`;
@@ -13,6 +14,7 @@ export default function ProductList({ category, limit, products: providedProduct
   const [loading, setLoading] = useState(!providedProducts);
   const [addedId, setAddedId] = useState(null);
   const { add } = useCart();
+  const { addCompare, isCompared } = useCompare();
 
   useEffect(() => {
     if (providedProducts) return undefined;
@@ -73,6 +75,7 @@ export default function ProductList({ category, limit, products: providedProduct
             </div>
             <div className="product-card-actions">
               <button className="button primary compact" type="button" onClick={() => addProduct(product)}>{addedId === product.id ? 'Added' : 'Add to cart'}</button>
+              <button className="button secondary compact" type="button" onClick={() => addCompare(product)}>{isCompared(product.id) ? 'Comparing' : 'Compare'}</button>
               <Link className="button secondary compact" to={`/product/${product.id}`}>View details</Link>
             </div>
           </div>

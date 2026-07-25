@@ -1875,3 +1875,14 @@ body {
   .recommendation-list article { grid-template-columns: 64px minmax(0, 1fr); }
   .recommendation-list b { grid-column: 2; }
 }
+
+.catalog-controls { display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(160px, 0.7fr)); gap: 0.75rem; margin: 1rem 0 1.5rem; }
+.catalog-controls.slim { grid-template-columns: minmax(220px, 1.4fr) repeat(2, minmax(160px, 0.7fr)); }
+.catalog-controls input, .catalog-controls select { width: 100%; border: 1px solid rgba(15, 23, 42, 0.14); border-radius: 8px; padding: 0.78rem 0.85rem; font: inherit; background: #fff; color: #111827; }
+.support-note { padding: 0.9rem 1rem; border-left: 4px solid #0f766e; background: #ecfdf5; color: #14532d; border-radius: 8px; }
+.product-quote-section { padding-top: 0; }
+.product-quote-panel { display: grid; grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr); gap: 1.25rem; align-items: start; }
+
+@media (max-width: 900px) {
+  .catalog-controls, .catalog-controls.slim, .product-quote-panel { grid-template-columns: 1fr; }
+}

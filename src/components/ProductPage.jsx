@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { assetUrl } from '../utils/assets';
 import { useCart } from '../context/CartContext';
+import { useCompare } from '../context/CompareContext';
+import QuoteForm from './QuoteForm';
+import { whatsappUrl } from '../utils/whatsapp';
 
 function formatKes(value) {
   return `KES ${Number(value || 0).toLocaleString()}`;
@@ -16,6 +19,7 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
   const [message, setMessage] = useState('');
   const { add } = useCart();
+  const { addCompare } = useCompare();
 
   useEffect(() => {
     axios.get('/api/products')
@@ -64,6 +68,10 @@ export default function ProductPage() {
           <div className="spec-row detail">
             {(product.specs || []).map((spec) => <span key={spec}>{spec}</span>)}
           </div>
+          <div className="spec-row detail">
+            {(product.useCases || []).map((useCase) => <span key={useCase}>{useCase}</span>)}
+          </div>
+          {product.supportNotes ? <p className="support-note">{product.supportNotes}</p> : null}
           <div className="purchase-box">
             <div>
               <small>Price</small>
@@ -77,9 +85,22 @@ export default function ProductPage() {
             <div className="purchase-actions">
               <button className="button primary" type="button" onClick={buyNow}>Buy now</button>
               <button className="button secondary" type="button" onClick={addToCart}>Add to cart</button>
+              <button className="button secondary" type="button" onClick={() => addCompare(product)}>Compare</button>
+              <a className="button glass" href={whatsappUrl({ text: `Hello Ramani Warehouse, I am interested in ${product.name} (${product.sku}).` })} target="_blank" rel="noreferrer">WhatsApp</a>
             </div>
             {message ? <p className="status-text">{message}</p> : null}
           </div>
+        </div>
+      </section>
+
+      <section className="section product-quote-section">
+        <div className="container product-quote-panel card-panel">
+          <div>
+            <span className="eyebrow">Project quote</span>
+            <h2>Need help confirming quantities or fulfillment?</h2>
+            <p>Share your project context and Ramani will confirm stock, buying mode, and quote details.</p>
+          </div>
+          <QuoteForm source="product" products={[product]} defaultNotes={`I am interested in ${product.name}.`} />
         </div>
       </section>
 

@@ -8,8 +8,29 @@ function slugify(value) {
   return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
+function searchable(product) {
+  return [product.name, product.sku, product.description, product.category, ...(product.specs || []), ...(product.tags || []), ...(product.useCases || [])].join(' ').toLowerCase();
+}
+
+function filterProducts(products, filters) {
+  const query = filters.query.trim().toLowerCase();
+  return products.filter((product) => {
+    const queryMatch = !query || searchable(product).includes(query);
+    const stockMatch = filters.stock === 'all' || String(product.stock || '').toLowerCase().includes(filters.stock);
+    const modeMatch = filters.buyingMode === 'all' || product.buyingMode === filters.buyingMode;
+    return queryMatch && stockMatch && modeMatch;
+  }).sort((a, b) => {
+    if (filters.sort === 'price-low') return Number(a.price || 0) - Number(b.price || 0);
+    if (filters.sort === 'price-high') return Number(b.price || 0) - Number(a.price || 0);
+    if (filters.sort === 'name') return String(a.name).localeCompare(String(b.name));
+    if (filters.sort === 'fastest') return String(a.leadTime || '').localeCompare(String(b.leadTime || ''));
+    return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+  });
+}
+
 export default function Categories() {
   const [site, setSite] = useState({ categories: [], products: [] });
+  const [filters, setFilters] = useState({ query: '', stock: 'all', buyingMode: 'all', sort: 'featured' });
 
   useEffect(() => {
     axios.get('/api/site').then((res) => setSite(res.data || {})).catch(() => {});
@@ -17,6 +38,7 @@ export default function Categories() {
 
   const categories = site.categories || [];
   const products = site.products || [];
+  const filteredProducts = useMemo(() => filterProducts(products, filters), [products, filters]);
   const categoryCounts = useMemo(() => products.reduce((map, product) => {
     map[product.category] = (map[product.category] || 0) + 1;
     return map;
@@ -53,10 +75,16 @@ export default function Categories() {
             <span className="eyebrow">All products</span>
             <h2>Full warehouse shelf.</h2>
           </div>
+          <Link className="button secondary" to="/estimator">Start estimator</Link>
         </div>
-        <ProductList products={products} />
+        <div className="catalog-controls">
+          <input value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder="Search products, specs, or project use" />
+          <select value={filters.stock} onChange={(event) => setFilters({ ...filters, stock: event.target.value })}><option value="all">All stock</option><option value="in stock">In stock</option><option value="available">Available</option><option value="bulk">Bulk</option><option value="custom">Custom</option></select>
+          <select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select>
+          <select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="price-low">Price low to high</option><option value="price-high">Price high to low</option><option value="name">Name</option><option value="fastest">Fastest lead time</option></select>
+        </div>
+        {filteredProducts.length ? <ProductList products={filteredProducts} /> : <div className="empty-cart"><p>No products match those filters.</p><Link className="button primary" to="/contact">Request sourcing help</Link><Link className="button secondary" to="/estimator">Try estimator</Link></div>}
       </section>
     </main>
   );
 }
-
