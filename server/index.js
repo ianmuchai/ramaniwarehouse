@@ -23,6 +23,10 @@ const dataDir = path.join(__dirname, 'data');
 const catalogPath = path.join(dataDir, 'products.json');
 const heroPath = path.join(dataDir, 'hero-slides.json');
 const categoriesPath = path.join(dataDir, 'categories.json');
+const leadsPath = path.join(dataDir, 'leads.json');
+const resourcesPath = path.join(dataDir, 'resources.json');
+const partnersPath = path.join(dataDir, 'partners.json');
+const analyticsPath = path.join(dataDir, 'analytics-events.json');
 const adminKey = process.env.ADMIN_KEY || 'ramani-admin';
 
 fs.mkdirSync(imageDir, { recursive: true });
