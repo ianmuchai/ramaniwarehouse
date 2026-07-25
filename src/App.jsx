@@ -12,6 +12,10 @@ import CategoryPage from './pages/CategoryPage';
 import Checkout from './pages/Checkout';
 import Account from './pages/Account';
 import Admin from './pages/Admin';
+import Estimator from './pages/Estimator';
+import Resources from './pages/Resources';
+import ResourceDetail from './pages/ResourceDetail';
+import Contact from './pages/Contact';
 
 export default function App() {
   return (
