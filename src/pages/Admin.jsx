@@ -62,11 +62,17 @@ export default function Admin() {
   const [uploading, setUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(null);
   const [heroUploading, setHeroUploading] = useState(false);
+  const [dashboard, setDashboard] = useState(null);
+  const [leads, setLeads] = useState([]);
+  const [selectedLeadId, setSelectedLeadId] = useState('');
+  const [leadMessage, setLeadMessage] = useState('');
+  const [leadNote, setLeadNote] = useState('');
 
   const adminHeaders = useMemo(() => ({ 'x-admin-key': adminKey }), [adminKey]);
   const selectedProduct = useMemo(() => products.find((product) => String(product.id) === String(selectedId)), [products, selectedId]);
   const selectedHero = useMemo(() => heroSlides.find((slide) => String(slide.id) === String(selectedHeroId)), [heroSlides, selectedHeroId]);
   const selectedCategory = useMemo(() => categories.find((category) => String(category.id) === String(selectedCategoryId)), [categories, selectedCategoryId]);
+  const selectedLead = useMemo(() => leads.find((lead) => lead.id === selectedLeadId), [leads, selectedLeadId]);
   const heroSpec = posterSpecs.find((spec) => spec.name === 'Homepage hero carousel') || posterSpecs[0];
   const categorySpec = posterSpecs.find((spec) => spec.name === 'Category carousel poster');
   const productSpec = posterSpecs.find((spec) => spec.name === 'Product card image');
@@ -74,13 +80,15 @@ export default function Admin() {
   const previewImages = imageListFromProduct(previewProduct);
 
   async function loadAdmin() {
-    const [productRes, categoryRes, heroRes, specsRes] = await Promise.all([
+    const [productRes, categoryRes, heroRes, specsRes, dashboardRes, leadsRes] = await Promise.all([
       fetch('/api/admin/products', { headers: adminHeaders }),
       fetch('/api/admin/categories', { headers: adminHeaders }),
       fetch('/api/admin/hero-slides', { headers: adminHeaders }),
-      fetch('/api/admin/poster-specs', { headers: adminHeaders })
+      fetch('/api/admin/poster-specs', { headers: adminHeaders }),
+      fetch('/api/admin/dashboard', { headers: adminHeaders }),
+      fetch('/api/admin/leads', { headers: adminHeaders })
     ]);
-    if (productRes.status === 401 || heroRes.status === 401 || categoryRes.status === 401) {
+    if (productRes.status === 401 || heroRes.status === 401 || categoryRes.status === 401 || dashboardRes.status === 401 || leadsRes.status === 401) {
       sessionStorage.removeItem('ramani_admin_key');
       setUnlocked(false);
       throw new Error('Admin access required.');
@@ -89,6 +97,8 @@ export default function Admin() {
     const categoryData = await categoryRes.json();
     const heroData = await heroRes.json();
     const specsData = await specsRes.json();
+    const dashboardData = await dashboardRes.json();
+    const leadsData = await leadsRes.json();
     setProducts(productData || []);
     setCategories(categoryData || []);
     if (!selectedCategoryId && categoryData?.[0]) {
@@ -97,6 +107,9 @@ export default function Admin() {
     }
     setHeroSlides(heroData || []);
     setPosterSpecs(specsData || []);
+    setDashboard(dashboardData || null);
+    setLeads(leadsData || []);
+    if (!selectedLeadId && leadsData?.[0]) setSelectedLeadId(leadsData[0].id);
     if (!selectedHeroId && heroData?.[0]) {
       setSelectedHeroId(heroData[0].id);
       setHeroForm(heroFormFromSlide(heroData[0]));
@@ -278,6 +291,48 @@ export default function Admin() {
     } catch (error) { setMessage(error.message || 'Gallery picture upload failed.'); } finally { setGalleryUploading(null); }
   }
 
+  async function updateLeadStatus(id, status) {
+    if (!id) return;
+    setLeadMessage('Updating lead status...');
+    try {
+      const response = await fetch(`/api/admin/leads/${id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ status })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Lead update failed.');
+      setLeads(data.leads || []);
+      setLeadMessage('Lead status updated.');
+    } catch (error) {
+      setLeadMessage(error.message || 'Could not update lead.');
+    }
+  }
+
+  async function addLeadNote(event) {
+    event.preventDefault();
+    if (!selectedLeadId || !leadNote.trim()) return setLeadMessage('Write a note before saving.');
+    setLeadMessage('Saving note...');
+    try {
+      const response = await fetch(`/api/admin/leads/${selectedLeadId}/notes`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ text: leadNote })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Note save failed.');
+      setLeads(data.leads || []);
+      setLeadNote('');
+      setLeadMessage('Note added.');
+    } catch (error) {
+      setLeadMessage(error.message || 'Could not save note.');
+    }
+  }
+
+  function copyLeadWhatsApp(lead) {
+    if (!lead) return;
+    const productNames = (lead.interest?.products || []).map((item) => item.name).filter(Boolean).join(', ');
+    const categoriesText = (lead.interest?.categories || []).join(', ');
+    const text = `Hello ${lead.customer?.name || ''}, this is Ramani Warehouse following up on your ${lead.source} request${productNames ? ` for ${productNames}` : categoriesText ? ` for ${categoriesText}` : ''}.`;
+    navigator.clipboard?.writeText(text).then(() => setLeadMessage('WhatsApp follow-up text copied.')).catch(() => setLeadMessage(text));
+  }
+
   async function deleteProduct() {
     if (selectedId === 'new') return;
     if (!window.confirm('Delete this product from the catalog?')) return;
@@ -308,7 +363,33 @@ export default function Admin() {
       </div></section>
 
       <section className="container admin-section-block">
-        <div className="admin-section-heading"><div><span className="eyebrow">Homepage Hero Carousel</span><h2>Edit the large carousel on the first screen.</h2><p>This controls the big rotating image area on the left side of the homepage hero.</p></div></div>
+        <div className="admin-section-heading"><div><span className="eyebrow">Growth Dashboard</span><h2>Track quote and sourcing follow-up.</h2><p>Review submitted quote forms, estimator requests, and lead status before managing storefront content.</p></div></div>
+        <div className="admin-metric-grid">
+          <article className="card-panel"><span>Total leads</span><strong>{dashboard?.leadsTotal || 0}</strong></article>
+          <article className="card-panel"><span>New</span><strong>{dashboard?.statusCounts?.new || 0}</strong></article>
+          <article className="card-panel"><span>Estimator</span><strong>{dashboard?.estimatorSubmissions || 0}</strong></article>
+          <article className="card-panel"><span>Events</span><strong>{dashboard?.analyticsTotal || 0}</strong></article>
+        </div>
+        <div className="lead-admin-grid">
+          <aside className="card-panel lead-list-panel">
+            <h3>Lead inbox</h3>
+            {leads.length ? leads.map((lead) => <button key={lead.id} type="button" className={lead.id === selectedLeadId ? 'lead-row active' : 'lead-row'} onClick={() => setSelectedLeadId(lead.id)}><strong>{lead.customer?.name}</strong><span>{lead.source} - {lead.status}</span><small>{new Date(lead.createdAt).toLocaleString()}</small></button>) : <p>No quote or estimator leads yet.</p>}
+          </aside>
+          <div className="card-panel lead-detail-panel">
+            {selectedLead ? <>
+              <div className="admin-editor-head"><div><span className="eyebrow">{selectedLead.source}</span><h2>{selectedLead.customer?.name}</h2><p>{selectedLead.customer?.phone} {selectedLead.customer?.location ? `- ${selectedLead.customer.location}` : ''}</p></div><button className="button secondary compact" type="button" onClick={() => copyLeadWhatsApp(selectedLead)}>Copy WhatsApp text</button></div>
+              <div className="lead-detail-grid"><span><strong>Status</strong><select value={selectedLead.status} onChange={(event) => updateLeadStatus(selectedLead.id, event.target.value)}><option value="new">New</option><option value="contacted">Contacted</option><option value="quoted">Quoted</option><option value="won">Won</option><option value="lost">Lost</option><option value="archived">Archived</option></select></span><span><strong>Preferred</strong>{selectedLead.preferredContact}</span><span><strong>Email</strong>{selectedLead.customer?.email || 'Not provided'}</span><span><strong>Budget</strong>{selectedLead.interest?.budget || 'Not provided'}</span></div>
+              <div className="lead-context-box"><strong>Interest</strong><p>{(selectedLead.interest?.products || []).map((item) => item.name).join(', ') || (selectedLead.interest?.categories || []).join(', ') || 'General sourcing request'}</p><small>{selectedLead.interest?.notes}</small>{selectedLead.estimator ? <pre>{JSON.stringify(selectedLead.estimator.recommendation, null, 2)}</pre> : null}</div>
+              <form className="lead-note-form" onSubmit={addLeadNote}><label>Admin note<textarea rows="3" value={leadNote} onChange={(event) => setLeadNote(event.target.value)} /></label><button className="button primary compact" type="submit">Save note</button></form>
+              <div className="lead-notes">{(selectedLead.adminNotes || []).map((note) => <p key={note.id}><strong>{new Date(note.createdAt).toLocaleString()}:</strong> {note.text}</p>)}</div>
+            </> : <p>Select a lead to view details.</p>}
+            {leadMessage ? <p className="status-text">{leadMessage}</p> : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="container admin-section-block">
+        <div className="admin-section-heading"><div><span className="eyebrow">Homepage Hero Carousel</span><h2>Edit the large carousel on the first screen.</h2><p>This controls the big rotating image area on the homepage hero.</p></div></div>
         <div className="hero-admin-grid">
           <aside className="card-panel hero-slide-list">
             <h3>Carousel slides</h3>
