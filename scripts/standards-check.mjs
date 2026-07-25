@@ -47,7 +47,7 @@ const checks = [
   },
   {
     file: 'src/index.css',
-    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill']
+    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair']
   }
 ];
 

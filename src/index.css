@@ -2555,3 +2555,78 @@ textarea { resize: vertical; }
     height: 150px;
   }
 }
+
+/* Estimator contrast repair */
+.estimator-contrast-repair,
+.product-aware-summary {
+  color: var(--ink);
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.16);
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.16);
+  backdrop-filter: none;
+}
+
+.product-aware-summary h2,
+.product-aware-summary h3,
+.product-aware-summary strong,
+.product-aware-summary b {
+  color: #101820;
+}
+
+.product-aware-summary p,
+.product-aware-summary span,
+.product-aware-summary small {
+  color: #334155;
+}
+
+.product-aware-summary .eyebrow {
+  color: #c2410c;
+}
+
+.product-aware-summary .estimate-summary-card {
+  background: linear-gradient(135deg, #0f766e 0%, #12312d 100%);
+  box-shadow: 0 18px 38px rgba(15, 118, 110, 0.24);
+}
+
+.product-aware-summary .estimate-summary-card span {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.product-aware-summary .estimate-summary-card strong {
+  color: #ffffff;
+}
+
+.product-aware-summary .estimate-metric-grid span,
+.product-aware-summary .recommendation-list article {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.product-aware-summary .recommendation-list span,
+.product-aware-summary .recommendation-list small {
+  color: #475569;
+}
+
+.product-aware-summary .confirmation-list span {
+  color: #14532d;
+  background: #ecfdf5;
+  border-left-color: #0f766e;
+}
+
+.product-aware-summary .quote-actions .button.secondary {
+  color: #101820;
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.16);
+}
+
+.product-aware-summary .button.glass {
+  color: #ffffff;
+  background: #128c7e;
+  border-color: #128c7e;
+  box-shadow: 0 14px 28px rgba(18, 140, 126, 0.22);
+}
+
+.product-aware-summary .button.glass:hover {
+  background: #0f766e;
+  border-color: #0f766e;
+}
