@@ -2707,3 +2707,61 @@ textarea { resize: vertical; }
   background: rgba(0, 0, 0, 0.28);
   border-color: rgba(255, 255, 255, 0.2);
 }
+
+/* Homepage hero glass fit refinement */
+.home-hero-glass-fit,
+.hero-market .hero-copy {
+  width: min(560px, 100%);
+  max-width: 560px;
+  padding: clamp(22px, 2.6vw, 34px);
+  border-radius: 26px;
+  border-color: rgba(255, 255, 255, 0.24);
+  background:
+    linear-gradient(145deg, rgba(8, 12, 18, 0.38), rgba(16, 24, 32, 0.28) 52%, rgba(15, 118, 110, 0.16));
+  box-shadow: 0 26px 74px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+}
+
+.hero-market .hero-copy::after {
+  border-radius: 25px;
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.16) 48%, rgba(0, 0, 0, 0.22)),
+    radial-gradient(circle at 12% 10%, rgba(255, 176, 0, 0.1), transparent 34%),
+    radial-gradient(circle at 90% 92%, rgba(20, 184, 166, 0.12), transparent 38%);
+}
+
+.hero-market .hero-copy h1 {
+  max-width: 520px;
+  margin: 12px 0 12px;
+  font-size: clamp(2rem, 3.1vw, 3.55rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.hero-market .hero-copy p {
+  max-width: 500px;
+  font-size: clamp(0.95rem, 0.98vw, 1.04rem);
+  line-height: 1.56;
+  text-wrap: pretty;
+}
+
+.hero-market .hero-actions {
+  margin: 20px 0 18px;
+}
+
+.hero-market .metric-row {
+  max-width: 500px;
+}
+
+@media (max-width: 720px) {
+  .hero-market .hero-copy {
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+    border-radius: 22px;
+  }
+  .hero-market .hero-copy h1 {
+    font-size: clamp(1.9rem, 8.6vw, 2.7rem);
+  }
+}
