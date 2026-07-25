@@ -3686,3 +3686,44 @@ textarea { resize: vertical; }
     transform: none;
   }
 }
+/* Modern admin access icon */
+.login-icon-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  color: #101820;
+  background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,247,237,0.9));
+  border-color: rgba(16, 24, 32, 0.1);
+  box-shadow: 0 12px 28px rgba(16,24,32,0.1), inset 0 1px 0 rgba(255,255,255,0.92);
+}
+
+.login-icon-button:hover,
+.login-icon-button:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #101820, #153f39);
+  border-color: rgba(249,115,22,0.44);
+}
+
+.admin-icon {
+  width: 19px;
+  height: 19px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 760px) {
+  .login-icon-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .admin-icon {
+    width: 18px;
+    height: 18px;
+  }
+}

@@ -1,6 +1,26 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const checks = [
+  {
+    file: 'index.html',
+    patterns: ['rel="manifest"', '/manifest.webmanifest', 'theme-color', 'apple-mobile-web-app-capable', 'apple-touch-icon']
+  },
+  {
+    file: 'public/manifest.webmanifest',
+    patterns: ['"name": "Ramani Warehouse"', '"short_name": "Ramani"', '"start_url": "/"', '"display": "standalone"', '"192x192"', '"512x512"', '"purpose": "any maskable"', '"shortcuts"']
+  },
+  {
+    file: 'public/service-worker.js',
+    patterns: ['CACHE_NAME', 'OFFLINE_URL', 'navigationPreload', "self.addEventListener('fetch'", 'networkFirstNavigation', 'staleWhileRevalidate']
+  },
+  {
+    file: 'public/offline.html',
+    patterns: ['Ramani Warehouse', 'offline', 'Shop categories', 'Request quote']
+  },
+  {
+    file: 'src/main.jsx',
+    patterns: ['navigator.serviceWorker.register', '/service-worker.js']
+  },
   {
     file: 'src/App.jsx',
     patterns: ['<MobileActionBar />', 'mobile-shell-padding']
@@ -15,7 +35,7 @@ const checks = [
   },
   {
     file: 'src/components/Header.jsx',
-    patterns: ['useLocation', 'aria-expanded={menuOpen}', 'aria-controls="primary-navigation"', 'autoComplete="current-password"']
+    patterns: ['useLocation', 'aria-expanded={menuOpen}', 'aria-controls="primary-navigation"', 'autoComplete="current-password"', 'admin-icon', 'viewBox="0 0 24 24"']
   },
   {
     file: 'src/pages/Home.jsx',
@@ -62,6 +82,11 @@ const checks = [
 const failures = [];
 
 for (const check of checks) {
+  if (!existsSync(check.file)) {
+    failures.push(`${check.file} does not exist`);
+    continue;
+  }
+
   const source = readFileSync(check.file, 'utf8');
   for (const pattern of check.patterns) {
     if (!source.includes(pattern)) {

@@ -81,7 +81,11 @@ export default function Header() {
 
           <div className="header-actions">
             <button className="login-icon-button" type="button" onClick={openLogin} aria-label="Login or admin access">
-              <span aria-hidden="true">A</span>
+              <svg className="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 3.4 18.4 6v5.1c0 4.1-2.54 7.72-6.4 9.1-3.86-1.38-6.4-5-6.4-9.1V6L12 3.4Z" />
+                <path d="M9.7 10.2a2.3 2.3 0 1 0 4.6 0 2.3 2.3 0 0 0-4.6 0Z" />
+                <path d="M8.55 16.15c.68-1.34 1.86-2.05 3.45-2.05s2.77.71 3.45 2.05" />
+              </svg>
             </button>
             <Link to="/checkout" className="cart-button" aria-label={`Cart with ${itemsCount} items`}>
               <span>Cart</span>

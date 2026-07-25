@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101820" />
+    <title>Ramani Warehouse offline</title>
+    <style>
+      :root { color: #101820; background: #fff8ef; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      * { box-sizing: border-box; }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; background: linear-gradient(135deg, #101820, #153f39 48%, #fff8ef 48%); }
+      main { width: min(460px, 100%); display: grid; gap: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.62); border-radius: 18px; background: rgba(255,255,255,0.94); box-shadow: 0 24px 70px rgba(16,24,32,0.24); }
+      .mark { width: 58px; height: 58px; display: grid; place-items: center; border-radius: 16px; color: #fff; background: linear-gradient(135deg, #f97316, #101820); font-weight: 950; }
+      h1 { margin: 0; font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.05; }
+      p { margin: 0; color: #475569; line-height: 1.6; }
+      nav { display: grid; gap: 10px; margin-top: 6px; }
+      a { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border-radius: 999px; color: #fff; background: #101820; font-weight: 900; text-decoration: none; }
+      a.secondary { color: #101820; background: #fff; border: 1px solid rgba(16,24,32,0.14); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">RW</div>
+      <h1>Ramani Warehouse is offline.</h1>
+      <p>Your installed Ramani app is ready, but this page needs an internet connection to refresh products, pricing, and quote details.</p>
+      <nav aria-label="Offline quick links">
+        <a href="/categories">Shop categories</a>
+        <a class="secondary" href="/contact">Request quote</a>
+      </nav>
+    </main>
+  </body>
+</html>
