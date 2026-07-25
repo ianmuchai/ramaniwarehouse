@@ -5,6 +5,7 @@ import { CompareProvider } from './context/CompareContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CompareTray from './components/CompareTray';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 import Home from './pages/Home';
 import ProductPage from './components/ProductPage';
 import Categories from './pages/Categories';
@@ -25,15 +26,20 @@ export default function App() {
           <div className="page-shell">
             <Header />
             <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/categories/:slug" element={<CategoryPage />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/admin" element={<Admin />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/categories/:slug" element={<CategoryPage />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/estimator" element={<Estimator />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/resources/:slug" element={<ResourceDetail />} />
+              <Route path="/contact" element={<Contact />} />
             </Routes>
             <CompareTray />
+            <FloatingWhatsApp />
             <Footer />
           </div>
         </CompareProvider>
@@ -41,4 +47,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
