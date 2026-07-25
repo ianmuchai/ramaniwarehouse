@@ -4,6 +4,7 @@ import axios from 'axios';
 import { assetUrl } from '../utils/assets';
 import CategoryCarousel from '../components/CategoryCarousel';
 import ProductList from '../components/ProductList';
+import { whatsappUrl } from '../utils/whatsapp';
 
 function slugify(value) {
   return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -19,6 +20,7 @@ const fallbackProfile = {
 
 export default function Home() {
   const [site, setSite] = useState({ profile: fallbackProfile, heroSlides: [], categories: [], products: [] });
+  const [resources, setResources] = useState([]);
   const [activeHero, setActiveHero] = useState(0);
 
   useEffect(() => {
@@ -83,6 +85,21 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section project-start-section">
+        <div className="section-heading split">
+          <div>
+            <span className="eyebrow">Start with your project</span>
+            <h2>Move from browsing to a quote-ready sourcing path.</h2>
+          </div>
+          <Link className="button primary" to="/estimator">Open estimator</Link>
+        </div>
+        <div className="project-start-grid">
+          <Link to="/estimator"><strong>Estimate mixed materials</strong><p>Eco Boards, glass, PPR, cleaning supplies, furniture, and custom sourcing can start from one guided brief.</p></Link>
+          <Link to="/contact"><strong>Request a formal quote</strong><p>Send project details, location, timeline, budget, and preferred follow-up method directly to Ramani.</p></Link>
+          <a href={whatsappUrl({ text: 'Hello Ramani Warehouse, I need help sourcing project materials.' })} target="_blank" rel="noreferrer"><strong>Continue on WhatsApp</strong><p>Use the fastest path when you need human help choosing products or confirming availability.</p></a>
+        </div>
+      </section>
+
       <section className="section category-strip-section categories-only-section">
         <div className="compact-section-title"><h2>Categories</h2></div>
         <div className="department-grid">
@@ -107,6 +124,26 @@ export default function Home() {
           <Link className="button secondary" to="/categories">View all</Link>
         </div>
         <ProductList products={products} limit={6} />
+      </section>
+
+      <section className="section resource-preview-section">
+        <div className="section-heading split">
+          <div>
+            <span className="eyebrow">Resource hub</span>
+            <h2>Guides for smarter Ramani sourcing.</h2>
+          </div>
+          <Link className="button secondary" to="/resources">View resources</Link>
+        </div>
+        <div className="resource-mini-grid">
+          {resources.map((resource) => <Link key={resource.id} to={`/resources/${resource.slug}`}><strong>{resource.title}</strong><p>{resource.summary}</p><span>Read guide</span></Link>)}
+        </div>
+      </section>
+
+      <section className="section contact-band-section">
+        <div className="contact-band">
+          <div><span className="eyebrow">Ramani support</span><h2>Need help confirming what to buy?</h2><p>Call, WhatsApp, or send a quote request with your product list and delivery area.</p></div>
+          <div className="contact-band-actions"><a className="button primary" href={whatsappUrl({ text: 'Hello Ramani Warehouse, I need help with a quote.' })} target="_blank" rel="noreferrer">WhatsApp</a><Link className="button secondary" to="/contact">Quote form</Link><a className="button glass" href="tel:+254793371994">Call +254 793 371994</a></div>
+        </div>
       </section>
 
       <section className="section experience-band">
