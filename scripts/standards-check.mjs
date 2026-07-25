@@ -47,7 +47,7 @@ const checks = [
   },
   {
     file: 'src/index.css',
-    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.hero-market .hero-copy h1']
+    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.home-hero-dark-filter', '.hero-market .hero-copy h1', 'rgba(0, 0, 0, 0.54)']
   }
 ];
 
