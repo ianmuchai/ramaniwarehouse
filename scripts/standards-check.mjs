@@ -2,6 +2,10 @@ import { existsSync, readFileSync } from 'node:fs';
 
 const checks = [
   {
+    file: 'src/components/PwaInstallButton.jsx',
+    patterns: ['beforeinstallprompt', 'deferredPrompt', '.prompt()', 'appinstalled', 'pwa-install-button', 'install-helper-card', 'Download app', 'Install Ramani']
+  },
+  {
     file: 'index.html',
     patterns: ['rel="manifest"', '/manifest.webmanifest', 'theme-color', 'apple-mobile-web-app-capable', 'apple-touch-icon']
   },
@@ -35,7 +39,7 @@ const checks = [
   },
   {
     file: 'src/components/Header.jsx',
-    patterns: ['useLocation', 'aria-expanded={menuOpen}', 'aria-controls="primary-navigation"', 'autoComplete="current-password"', 'admin-icon', 'viewBox="0 0 24 24"']
+    patterns: ['useLocation', 'aria-expanded={menuOpen}', 'aria-controls="primary-navigation"', 'autoComplete="current-password"', 'admin-icon', 'viewBox="0 0 24 24"', 'PwaInstallButton', '<PwaInstallButton />']
   },
   {
     file: 'src/pages/Home.jsx',
@@ -75,7 +79,7 @@ const checks = [
   },
   {
     file: 'src/index.css',
-    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.home-hero-dark-filter', '.hero-market .hero-copy h1', 'rgba(0, 0, 0, 0.54)', '.home-hero-glass-fit', 'text-wrap: balance', '/* Mobile UX optimization */', '.mobile-action-bar', '.mobile-shell-padding', '.mobile-filter-scroll', '.mobile-hero-stack', '.mobile-product-actions']
+    patterns: ['.skip-link', '.menu-toggle', '.nav.is-open', ':focus-visible', '@media (prefers-reduced-motion: reduce)', '.catalog-result-bar', '.checkout-assurance', '.buying-mode-pill', '.product-aware-summary .button.glass', '.estimator-contrast-repair', '.estimator-glass-balance', 'backdrop-filter: blur(22px)', '.home-hero-copy-contrast', '.home-hero-dark-filter', '.hero-market .hero-copy h1', 'rgba(0, 0, 0, 0.54)', '.home-hero-glass-fit', 'text-wrap: balance', '/* Mobile UX optimization */', '.mobile-action-bar', '.mobile-shell-padding', '.mobile-filter-scroll', '.mobile-hero-stack', '.mobile-product-actions', '.pwa-install-button', '.install-helper-card', '.install-icon']
   }
 ];
 

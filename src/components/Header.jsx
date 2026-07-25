@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import PwaInstallButton from './PwaInstallButton';
 
 export default function Header() {
   const { itemsCount } = useCart();
@@ -80,6 +81,7 @@ export default function Header() {
           </nav>
 
           <div className="header-actions">
+            <PwaInstallButton />
             <button className="login-icon-button" type="button" onClick={openLogin} aria-label="Login or admin access">
               <svg className="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M12 3.4 18.4 6v5.1c0 4.1-2.54 7.72-6.4 9.1-3.86-1.38-6.4-5-6.4-9.1V6L12 3.4Z" />
