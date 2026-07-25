@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { CompareProvider } from './context/CompareContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -15,9 +16,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <CartProvider>
-        <div className="page-shell">
-          <Header />
-          <Routes>
+        <CompareProvider>
+          <div className="page-shell">
+            <Header />
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/categories" element={<Categories />} />
@@ -25,9 +27,10 @@ export default function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account" element={<Account />} />
             <Route path="/admin" element={<Admin />} />
-          </Routes>
-          <Footer />
-        </div>
+            </Routes>
+            <Footer />
+          </div>
+        </CompareProvider>
       </CartProvider>
     </BrowserRouter>
   );

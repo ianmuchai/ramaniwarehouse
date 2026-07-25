@@ -1,165 +1,347 @@
 [
-  {
-    "id": 1,
-    "sku": "RW-ECO-018",
-    "name": "Eco Board",
-    "price": 18500,
-    "description": "Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.",
-    "category": "Eco Board",
-    "categoryId": "eco-boards",
-    "image": "/images/1784184145838-Snapchat-1643544503.jpg.jpeg",
-    "rating": 4.8,
-    "leadTime": "2-4 days",
-    "stock": "In stock",
-    "badge": "Best seller",
-    "specs": [
-      "Moisture resistant",
-      "Easy to cut",
-      "Low waste installation"
-    ],
-    "gallery": [
-      "/images/1784184145838-Snapchat-1643544503.jpg.jpeg",
-      "/images/1784184153194-IMG-20250718-WA0011.jpg.jpeg",
-      "/images/1784184129823-IMG-20250718-WA0013.jpg.jpeg"
-    ]
-  },
-  {
-    "id": 2,
-    "sku": "RW-HDP-032",
-    "name": "HDPE Plastics",
-    "price": 32000,
-    "description": "Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.",
-    "category": "HDPE Plastics",
-    "categoryId": "hdpe-plastics",
-    "image": "/images/1784184541368-IMG-20251015-WA0058.jpg.jpeg",
-    "rating": 4.7,
-    "leadTime": "1-3 days",
-    "stock": "Bulk ready",
-    "badge": "Bulk supply",
-    "specs": [
-      "Washed material",
-      "Manufacturing grade",
-      "Consistent batches"
-    ],
-    "gallery": [
-      "/images/1784184541368-IMG-20251015-WA0058.jpg.jpeg",
-      "/images/1784184554019-IMG-20251015-WA0053.jpg.jpeg",
-      "/images/1784184574574-IMG-20251015-WA0059.jpg.jpeg"
-    ]
-  },
-  {
-    "id": 3,
-    "sku": "RW-GLS-009",
-    "name": "Sorted Glass Recycling",
-    "price": 9800,
-    "description": "Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.",
-    "category": "Glass Recycling",
-    "categoryId": "glass-recycling",
-    "image": "/images/1784142493870-IMG-20250218-WA0001.jpg.jpeg",
-    "rating": 4.6,
-    "leadTime": "3-5 days",
-    "stock": "Available",
-    "badge": "Eco choice",
-    "specs": [
-      "Sorted batches",
-      "Project quantities",
-      "Reuse ready"
-    ],
-    "gallery": [
-      "/images/1784142493870-IMG-20250218-WA0001.jpg.jpeg",
-      "/images/1784142536557-IMG-20250217-WA00041.jpg.jpeg"
-    ]
-  },
-  {
-    "id": 4,
-    "sku": "RW-PPR-145",
-    "name": "PPR Pipes & Fittings",
-    "price": 14500,
-    "description": "Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.",
-    "category": "PPR Pipes & Fittings",
-    "categoryId": "ppr-pipes-fittings",
-    "image": "/images/1784185175340-Client-Challenge.jpg",
-    "rating": 4.9,
-    "leadTime": "Same week",
-    "stock": "Fast moving",
-    "badge": "Contractor pick",
-    "specs": [
-      "Heat resistant",
-      "Low leakage fittings",
-      "Commercial grade"
-    ],
-    "gallery": [
-      "/images/1784185175340-Client-Challenge.jpg",
-      "/images/1784185182854-DSTherm_-ppr-fittings.jpg"
-    ]
-  },
-  {
-    "id": 5,
-    "sku": "RW-INT-072",
-    "name": "Commercial Interior Design",
-    "price": 72000,
-    "description": "A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.",
-    "category": "Interior Design",
-    "categoryId": "interior-design",
-    "image": "/images/1784142660009-IMG-20250208-WA0002.jpg.jpeg",
-    "rating": 4.8,
-    "leadTime": "Consult first",
-    "stock": "Custom order",
-    "badge": "Premium",
-    "specs": [
-      "Material selection",
-      "Space planning",
-      "Finish schedule"
-    ],
-    "gallery": [
-      "/images/1784142660009-IMG-20250208-WA0002.jpg.jpeg",
-      "/images/1784142704694-IMG-20250219-WA0020.jpg.jpeg"
-    ]
-  },
-  {
-    "id": 6,
-    "sku": "RW-CLN-065",
-    "name": "Industrial Detergent & Grease Solution",
-    "price": 6500,
-    "description": "Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.",
-    "category": "Detergent & Grease",
-    "categoryId": "cleaning-solutions",
-    "image": "/images/1784184371400-IMG-20251015-WA0073.jpg.jpeg",
-    "rating": 4.5,
-    "leadTime": "1-2 days",
-    "stock": "In stock",
-    "badge": "Operations essential",
-    "specs": [
-      "Heavy-duty clean",
-      "Bulk packs",
-      "Facility friendly"
-    ],
-    "gallery": [
-      "/images/1784184371400-IMG-20251015-WA0073.jpg.jpeg",
-      "/images/1784184418410-IMG-20260525-WA0012.jpg.jpeg"
-    ]
-  },
-  {
-    "id": 7,
-    "sku": "RW-FUR-021",
-    "name": "Dining Room Set",
-    "price": 68500,
-    "description": "A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.",
-    "category": "Furniture",
-    "categoryId": "furniture",
-    "image": "/images/1784185525613-STN_7297.jpg.jpeg",
-    "rating": 4.8,
-    "leadTime": "5-10 days",
-    "stock": "Made to order",
-    "badge": "New arrival",
-    "specs": [
-      "Dining table included",
-      "Matching chairs",
-      "Custom finishes available"
-    ],
-    "gallery": [
-      "/images/1784185525613-STN_7297.jpg.jpeg",
-      "/images/1784185552758-STN_7414.jpg.jpeg"
-    ]
-  }
+    {
+        "id":  1,
+        "sku":  "RW-ECO-018",
+        "name":  "Eco Board",
+        "price":  18500,
+        "description":  "Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.",
+        "category":  "Eco Board",
+        "categoryId":  "eco-boards",
+        "image":  "/images/1784184145838-Snapchat-1643544503.jpg.jpeg",
+        "rating":  4.8,
+        "leadTime":  "2-4 days",
+        "stock":  "In stock",
+        "badge":  "Best seller",
+        "specs":  [
+                      "Moisture resistant",
+                      "Easy to cut",
+                      "Low waste installation"
+                  ],
+        "gallery":  [
+                        "/images/1784184145838-Snapchat-1643544503.jpg.jpeg",
+                        "/images/1784184153194-IMG-20250718-WA0011.jpg.jpeg",
+                        "/images/1784184129823-IMG-20250718-WA0013.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share approximate area, number of rooms or panels, finish expectations, and delivery area for a formal quote.",
+        "projectTypes":  [
+                             "home",
+                             "office",
+                             "retail",
+                             "interior fit-out"
+                         ],
+        "minOrder":  "Confirm with Ramani",
+        "useCases":  [
+                         "Partitions",
+                         "Interior wall panels",
+                         "Ceiling accents",
+                         "Retail display surfaces"
+                     ],
+        "tags":  [
+                     "eco board",
+                     "sustainable panels",
+                     "interiors",
+                     "partitions"
+                 ],
+        "estimatorType":  "area",
+        "bulkAvailable":  true,
+        "quoteOnly":  false,
+        "measurementUnit":  "boards",
+        "featured":  true,
+        "buyingMode":  "quote"
+    },
+    {
+        "id":  2,
+        "sku":  "RW-HDP-032",
+        "name":  "HDPE Plastics",
+        "price":  32000,
+        "description":  "Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.",
+        "category":  "HDPE Plastics",
+        "categoryId":  "hdpe-plastics",
+        "image":  "/images/1784184541368-IMG-20251015-WA0058.jpg.jpeg",
+        "rating":  4.7,
+        "leadTime":  "1-3 days",
+        "stock":  "Bulk ready",
+        "badge":  "Bulk supply",
+        "specs":  [
+                      "Washed material",
+                      "Manufacturing grade",
+                      "Consistent batches"
+                  ],
+        "gallery":  [
+                        "/images/1784184541368-IMG-20251015-WA0058.jpg.jpeg",
+                        "/images/1784184554019-IMG-20251015-WA0053.jpg.jpeg",
+                        "/images/1784184574574-IMG-20251015-WA0059.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share target quantity, grade expectations, production use, and preferred delivery timing.",
+        "projectTypes":  [
+                             "manufacturing",
+                             "workshop",
+                             "recycling",
+                             "bulk supply"
+                         ],
+        "minOrder":  "Bulk quantities quoted",
+        "useCases":  [
+                         "Manufacturing input",
+                         "Packaging production",
+                         "Moulding",
+                         "Bulk recycled supply"
+                     ],
+        "tags":  [
+                     "hdpe",
+                     "plastics",
+                     "bulk supply",
+                     "manufacturing"
+                 ],
+        "estimatorType":  "bulk",
+        "bulkAvailable":  true,
+        "quoteOnly":  true,
+        "measurementUnit":  "kg or batches",
+        "featured":  true,
+        "buyingMode":  "quote"
+    },
+    {
+        "id":  3,
+        "sku":  "RW-GLS-009",
+        "name":  "Sorted Glass Recycling",
+        "price":  9800,
+        "description":  "Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.",
+        "category":  "Glass Recycling",
+        "categoryId":  "glass-recycling",
+        "image":  "/images/1784142493870-IMG-20250218-WA0001.jpg.jpeg",
+        "rating":  4.6,
+        "leadTime":  "3-5 days",
+        "stock":  "Available",
+        "badge":  "Eco choice",
+        "specs":  [
+                      "Sorted batches",
+                      "Project quantities",
+                      "Reuse ready"
+                  ],
+        "gallery":  [
+                        "/images/1784142493870-IMG-20250218-WA0001.jpg.jpeg",
+                        "/images/1784142536557-IMG-20250217-WA00041.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share intended use, sorting needs, craft or project volume, and handling expectations.",
+        "projectTypes":  [
+                             "recycling",
+                             "glass craft",
+                             "construction",
+                             "decor"
+                         ],
+        "minOrder":  "Project quantities quoted",
+        "useCases":  [
+                         "Glass crafting",
+                         "Decor projects",
+                         "Construction reuse",
+                         "Industrial recycling"
+                     ],
+        "tags":  [
+                     "glass",
+                     "recycling",
+                     "craft",
+                     "decor"
+                 ],
+        "estimatorType":  "bulk",
+        "bulkAvailable":  true,
+        "quoteOnly":  true,
+        "measurementUnit":  "kg or sorted batches",
+        "featured":  true,
+        "buyingMode":  "quote"
+    },
+    {
+        "id":  4,
+        "sku":  "RW-PPR-145",
+        "name":  "PPR Pipes \u0026 Fittings",
+        "price":  14500,
+        "description":  "Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.",
+        "category":  "PPR Pipes \u0026 Fittings",
+        "categoryId":  "ppr-pipes-fittings",
+        "image":  "/images/1784185175340-Client-Challenge.jpg",
+        "rating":  4.9,
+        "leadTime":  "Same week",
+        "stock":  "Fast moving",
+        "badge":  "Contractor pick",
+        "specs":  [
+                      "Heat resistant",
+                      "Low leakage fittings",
+                      "Commercial grade"
+                  ],
+        "gallery":  [
+                        "/images/1784185175340-Client-Challenge.jpg",
+                        "/images/1784185182854-DSTherm_-ppr-fittings.jpg"
+                    ],
+        "supportNotes":  "Share project type, approximate pipe runs, fitting needs, and site urgency before final supply.",
+        "projectTypes":  [
+                             "plumbing",
+                             "maintenance",
+                             "construction",
+                             "commercial"
+                         ],
+        "minOrder":  "Confirm with Ramani",
+        "useCases":  [
+                         "Water systems",
+                         "Plumbing installation",
+                         "Maintenance repairs",
+                         "Contractor projects"
+                     ],
+        "tags":  [
+                     "ppr",
+                     "pipes",
+                     "fittings",
+                     "plumbing"
+                 ],
+        "estimatorType":  "plumbing",
+        "bulkAvailable":  true,
+        "quoteOnly":  false,
+        "measurementUnit":  "runs and fittings",
+        "featured":  true,
+        "buyingMode":  "consult"
+    },
+    {
+        "id":  5,
+        "sku":  "RW-INT-072",
+        "name":  "Commercial Interior Design",
+        "price":  72000,
+        "description":  "A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.",
+        "category":  "Interior Design",
+        "categoryId":  "interior-design",
+        "image":  "/images/1784142660009-IMG-20250208-WA0002.jpg.jpeg",
+        "rating":  4.8,
+        "leadTime":  "Consult first",
+        "stock":  "Custom order",
+        "badge":  "Premium",
+        "specs":  [
+                      "Material selection",
+                      "Space planning",
+                      "Finish schedule"
+                  ],
+        "gallery":  [
+                        "/images/1784142660009-IMG-20250208-WA0002.jpg.jpeg",
+                        "/images/1784142704694-IMG-20250219-WA0020.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share space type, area, budget range, timeline, and finish direction for consultation.",
+        "projectTypes":  [
+                             "office",
+                             "retail",
+                             "hospitality",
+                             "interior fit-out"
+                         ],
+        "minOrder":  "Consultation led",
+        "useCases":  [
+                         "Office fit-out",
+                         "Retail interiors",
+                         "Hospitality spaces",
+                         "Display walls"
+                     ],
+        "tags":  [
+                     "interior design",
+                     "fit-out",
+                     "finishes",
+                     "consultation"
+                 ],
+        "estimatorType":  "space",
+        "bulkAvailable":  false,
+        "quoteOnly":  true,
+        "measurementUnit":  "spaces",
+        "featured":  true,
+        "buyingMode":  "consult"
+    },
+    {
+        "id":  6,
+        "sku":  "RW-CLN-065",
+        "name":  "Industrial Detergent \u0026 Grease Solution",
+        "price":  6500,
+        "description":  "Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.",
+        "category":  "Detergent \u0026 Grease",
+        "categoryId":  "cleaning-solutions",
+        "image":  "/images/1784184371400-IMG-20251015-WA0073.jpg.jpeg",
+        "rating":  4.5,
+        "leadTime":  "1-2 days",
+        "stock":  "In stock",
+        "badge":  "Operations essential",
+        "specs":  [
+                      "Heavy-duty clean",
+                      "Bulk packs",
+                      "Facility friendly"
+                  ],
+        "gallery":  [
+                        "/images/1784184371400-IMG-20251015-WA0073.jpg.jpeg",
+                        "/images/1784184418410-IMG-20260525-WA0012.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share facility type, cleaning frequency, and pack size needs for repeat supply planning.",
+        "projectTypes":  [
+                             "cleaning operations",
+                             "workshop",
+                             "hospitality",
+                             "maintenance"
+                         ],
+        "minOrder":  "Single packs available",
+        "useCases":  [
+                         "Facility cleaning",
+                         "Workshop hygiene",
+                         "Hospitality backrooms",
+                         "Repeat operations supply"
+                     ],
+        "tags":  [
+                     "detergent",
+                     "grease",
+                     "cleaning",
+                     "operations"
+                 ],
+        "estimatorType":  "repeat-supply",
+        "bulkAvailable":  true,
+        "quoteOnly":  false,
+        "measurementUnit":  "packs",
+        "featured":  true,
+        "buyingMode":  "checkout"
+    },
+    {
+        "id":  7,
+        "sku":  "RW-FUR-021",
+        "name":  "Dining Room Set",
+        "price":  68500,
+        "description":  "A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.",
+        "category":  "Furniture",
+        "categoryId":  "furniture",
+        "image":  "/images/1784185525613-STN_7297.jpg.jpeg",
+        "rating":  4.8,
+        "leadTime":  "5-10 days",
+        "stock":  "Made to order",
+        "badge":  "New arrival",
+        "specs":  [
+                      "Dining table included",
+                      "Matching chairs",
+                      "Custom finishes available"
+                  ],
+        "gallery":  [
+                        "/images/1784185525613-STN_7297.jpg.jpeg",
+                        "/images/1784185552758-STN_7414.jpg.jpeg"
+                    ],
+        "supportNotes":  "Share room type, quantity, finish preference, and delivery area for custom requests.",
+        "projectTypes":  [
+                             "home",
+                             "hospitality",
+                             "furniture sourcing",
+                             "retail"
+                         ],
+        "minOrder":  "One set",
+        "useCases":  [
+                         "Dining rooms",
+                         "Hospitality furnishing",
+                         "Apartment furnishing",
+                         "Commercial suites"
+                     ],
+        "tags":  [
+                     "furniture",
+                     "dining",
+                     "chairs",
+                     "custom finishes"
+                 ],
+        "estimatorType":  "pieces",
+        "bulkAvailable":  false,
+        "quoteOnly":  false,
+        "measurementUnit":  "sets",
+        "featured":  true,
+        "buyingMode":  "checkout"
+    }
 ]
