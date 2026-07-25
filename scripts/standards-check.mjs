@@ -19,7 +19,11 @@ const checks = [
   },
   {
     file: 'src/pages/Estimator.jsx',
-    patterns: ['autoComplete="name"', 'type="tel"', 'autoComplete="tel"', 'role="status"', 'aria-live="polite"']
+    patterns: ['autoComplete="name"', 'type="tel"', 'autoComplete="tel"', 'role="status"', 'aria-live="polite"', 'product-type-grid', 'Selected path', 'Product-specific requirements', 'Planning outcome']
+  },
+  {
+    file: 'src/utils/estimatorLogic.mjs',
+    patterns: ['solutionTracks', 'eco-boards', 'glass-recycling', 'ppr-pipes-fittings', 'cleaning-solutions', 'buildEstimatorSummary', 'recommendProducts']
   },
   {
     file: 'src/pages/Checkout.jsx',

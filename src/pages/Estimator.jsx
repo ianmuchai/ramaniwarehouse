@@ -4,24 +4,18 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { assetUrl } from '../utils/assets';
 import { whatsappUrl } from '../utils/whatsapp';
-
-const projectTypes = ['home', 'office', 'retail', 'hospitality', 'workshop', 'maintenance', 'construction', 'recycling', 'glass craft', 'cleaning operations', 'furniture sourcing', 'interior fit-out', 'plumbing', 'custom'];
-const urgencies = ['today', 'this week', 'this month', 'planning'];
+import {
+  buildEstimatorPayload,
+  buildEstimatorSummary,
+  createEstimatorInput,
+  getTrack,
+  recommendProducts,
+  solutionTracks,
+  urgencies
+} from '../utils/estimatorLogic.mjs';
 
 function formatKes(value) {
   return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
-function recommendProducts(products, input) {
-  const selected = new Set(input.categories);
-  const terms = [input.projectType, input.quantity, input.notes, ...input.categories].join(' ').toLowerCase();
-  return products.filter((product) => {
-    const categoryMatch = selected.size === 0 || selected.has(product.category);
-    const projectMatch = (product.projectTypes || []).some((type) => terms.includes(String(type).toLowerCase()));
-    const tagMatch = (product.tags || []).some((tag) => terms.includes(String(tag).toLowerCase()));
-    const useMatch = (product.useCases || []).some((useCase) => terms.includes(String(useCase).toLowerCase()));
-    return categoryMatch || projectMatch || tagMatch || useMatch;
-  }).slice(0, 6);
 }
 
 function modeLabel(mode) {
@@ -30,9 +24,37 @@ function modeLabel(mode) {
   return 'Checkout-ready';
 }
 
+function FieldControl({ field, value, onChange }) {
+  if (field.type === 'select') {
+    return (
+      <label className="dynamic-field">
+        <span>{field.label}</span>
+        <select value={value || ''} onChange={(event) => onChange(field.key, event.target.value)}>
+          {(field.options || []).map((option) => <option key={option} value={option}>{option}</option>)}
+        </select>
+      </label>
+    );
+  }
+
+  return (
+    <label className="dynamic-field">
+      <span>{field.label}</span>
+      <input
+        type={field.type || 'text'}
+        inputMode={field.type === 'number' ? 'decimal' : undefined}
+        min={field.type === 'number' ? '0' : undefined}
+        autoComplete="off"
+        value={value || ''}
+        placeholder={field.placeholder || ''}
+        onChange={(event) => onChange(field.key, event.target.value)}
+      />
+    </label>
+  );
+}
+
 export default function Estimator() {
   const [site, setSite] = useState({ categories: [], products: [] });
-  const [input, setInput] = useState({ projectType: 'custom', categories: [], quantity: '', urgency: 'this week', location: '', budget: '', notes: '' });
+  const [input, setInput] = useState(() => createEstimatorInput('eco-boards'));
   const [customer, setCustomer] = useState({ name: '', phone: '', email: '', location: '' });
   const [preferredContact, setPreferredContact] = useState('whatsapp');
   const [submitted, setSubmitted] = useState(false);
@@ -44,14 +66,27 @@ export default function Estimator() {
     axios.get('/api/site').then((res) => setSite(res.data || {})).catch(() => {});
   }, []);
 
-  const recommendation = useMemo(() => recommendProducts(site.products || [], input), [site.products, input]);
+  const selectedTrack = useMemo(() => getTrack(input.trackId), [input.trackId]);
+  const categoryById = useMemo(() => new Map((site.categories || []).map((category) => [category.id, category])), [site.categories]);
+  const products = site.products || [];
+  const recommendation = useMemo(() => recommendProducts(products, input), [products, input]);
+  const estimatorSummary = useMemo(() => buildEstimatorSummary(input, recommendation), [input, recommendation]);
   const estimatedSubtotal = recommendation.reduce((sum, product) => sum + Number(product.price || 0), 0);
+  const heroImage = categoryById.get(selectedTrack.id)?.image || '/images/1784186033855-ChatGPT-Image-Jul-16-2026-10_13_37-AM.png';
 
-  function toggleCategory(categoryName) {
-    setInput((current) => ({
-      ...current,
-      categories: current.categories.includes(categoryName) ? current.categories.filter((item) => item !== categoryName) : [...current.categories, categoryName]
+  function selectTrack(trackId) {
+    setInput((current) => createEstimatorInput(trackId, {
+      urgency: current.urgency,
+      location: current.location,
+      budget: current.budget,
+      notes: current.notes
     }));
+    setSubmitted(false);
+    setMessage('');
+  }
+
+  function updateSpec(key, value) {
+    setInput((current) => ({ ...current, spec: { ...current.spec, [key]: value } }));
   }
 
   async function submit(event) {
@@ -61,22 +96,14 @@ export default function Estimator() {
       return;
     }
     setSubmitting(true);
-    setMessage('Sending estimator request...');
+    setMessage('Sending product-specific estimator request...');
     try {
-      const payload = {
-        customer: { ...customer, location: customer.location || input.location },
-        input,
-        preferredContact,
-        recommendation: {
-          products: recommendation.map((product) => ({ id: product.id, name: product.name, sku: product.sku, buyingMode: product.buyingMode })),
-          estimatedSubtotal
-        }
-      };
+      const payload = buildEstimatorPayload(input, customer, preferredContact, recommendation, estimatorSummary);
       const response = await fetch('/api/estimator', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Estimator submission failed.');
       setSubmitted(true);
-      setMessage('Estimator submitted. Ramani will confirm quantities and quote details.');
+      setMessage('Estimator submitted. Ramani will confirm the product path, quantities, and quote details.');
     } catch (error) {
       setMessage(error.message || 'Could not submit estimator.');
     } finally {
@@ -89,44 +116,143 @@ export default function Estimator() {
     setMessage('Checkout-ready and quote-led items were added to your cart. Consult-first items remain in your request.');
   }
 
-  const whatsappText = `Hello Ramani Warehouse, I need help with a ${input.projectType} project. Categories: ${input.categories.join(', ') || 'not sure'}. Quantity/details: ${input.quantity || input.notes || 'to confirm'}.`;
+  const whatsappText = `Hello Ramani Warehouse, I need help with ${selectedTrack.title}. ${estimatorSummary.quantitySignal} Delivery area: ${input.location || customer.location || 'to confirm'}.`;
 
   return (
-    <main className="estimator-page">
-      <section className="page-hero compact">
-        <div className="container">
-          <span className="eyebrow">Project Estimator</span>
-          <h1>Build a quote-ready Ramani materials list.</h1>
-          <p>Select the products and project context you know. Ramani will confirm final quantities, availability, and fulfillment.</p>
+    <main className="estimator-page product-aware-estimator-page">
+      <section className="page-hero compact estimator-hero">
+        <div className="container estimator-hero-inner">
+          <div>
+            <span className="eyebrow">Product Estimator</span>
+            <h1>Build a Ramani quote around the product you actually need.</h1>
+            <p>Choose Eco Board, glass, HDPE, PPR, cleaning supplies, furniture, or fit-out support. The estimator changes its questions, planning logic, and recommendations for that product path.</p>
+          </div>
+          <div className="estimator-hero-proof" aria-label="Estimator coverage">
+            <img className="estimator-hero-image" src={assetUrl(heroImage)} alt="" loading="eager" decoding="async" />
+            <span>7 product paths</span>
+            <span>Dynamic requirements</span>
+            <span>Quote-ready handoff</span>
+          </div>
         </div>
       </section>
 
-      <section className="container estimator-grid">
-        <form className="card-panel estimator-form" onSubmit={submit} aria-busy={submitting}>
-          <h2>Project details</h2>
-          <label>Project type<select value={input.projectType} onChange={(event) => setInput({ ...input, projectType: event.target.value })}>{projectTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></label>
-          <div className="category-choice-grid">
-            {(site.categories || []).map((category) => <label key={category.id}><input type="checkbox" checked={input.categories.includes(category.name)} onChange={() => toggleCategory(category.name)} />{category.name}</label>)}
+      <section className="container estimator-workbench">
+        <form className="estimator-form product-aware-form" onSubmit={submit} aria-busy={submitting}>
+          <div className="estimator-section-heading">
+            <span className="eyebrow">Step 1</span>
+            <h2>Choose the Ramani product type</h2>
+            <p>The first choice drives the measurement fields, recommendation logic, and follow-up path.</p>
           </div>
-          <label>Approximate quantity or area<input autoComplete="off" value={input.quantity} onChange={(event) => setInput({ ...input, quantity: event.target.value })} placeholder="e.g. 4 rooms, 20 packs, 200kg, not sure" /></label>
-          <div className="quote-grid"><label>Urgency<select value={input.urgency} onChange={(event) => setInput({ ...input, urgency: event.target.value })}>{urgencies.map((urgency) => <option key={urgency} value={urgency}>{urgency}</option>)}</select></label><label>Delivery area<input autoComplete="shipping address-level2" value={input.location} onChange={(event) => setInput({ ...input, location: event.target.value })} /></label></div>
-          <label>Budget range<input inputMode="text" autoComplete="off" value={input.budget} onChange={(event) => setInput({ ...input, budget: event.target.value })} /></label>
-          <label>Notes<textarea rows="4" value={input.notes} onChange={(event) => setInput({ ...input, notes: event.target.value })} /></label>
-          <h2>Follow-up details</h2>
-          <div className="quote-grid"><label>Name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label><label>Phone<input required type="tel" inputMode="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label><label>Email<input type="email" autoComplete="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label><label>Preferred contact<select value={preferredContact} onChange={(event) => setPreferredContact(event.target.value)}><option value="whatsapp">WhatsApp</option><option value="call">Call</option><option value="email">Email</option></select></label></div>
-          <button className="button primary" type="submit" disabled={submitting}>{submitting ? 'Sending...' : 'Request formal quote'}</button>
-          {message ? <p className="status-text" role="status" aria-live="polite">{message}</p> : null}
+
+          <div className="product-type-grid" role="list" aria-label="Ramani product estimator paths">
+            {solutionTracks.map((track) => {
+              const category = categoryById.get(track.id);
+              const active = track.id === selectedTrack.id;
+              const trackProducts = products.filter((product) => track.productCategoryIds.includes(product.categoryId));
+              return (
+                <button
+                  key={track.id}
+                  type="button"
+                  role="listitem"
+                  className={active ? 'product-type-card active' : 'product-type-card'}
+                  style={{ '--track-color': category?.color || '#f97316' }}
+                  aria-pressed={active}
+                  onClick={() => selectTrack(track.id)}
+                >
+                  <span className="product-type-media" aria-hidden="true">
+                    {category?.image ? <img src={assetUrl(category.image)} alt="" loading="lazy" decoding="async" /> : null}
+                  </span>
+                  <span className="product-type-body">
+                    <span className="track-kicker">{track.buyingPath}</span>
+                    <strong>{track.title}</strong>
+                    <small>{track.decisionCue}</small>
+                    <em>{trackProducts.length || 1} catalogue match</em>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <section className="selected-track-panel" aria-label="Selected path">
+            <div>
+              <span className="eyebrow">Selected path</span>
+              <h2>{selectedTrack.title}</h2>
+              <p>{selectedTrack.prompt}</p>
+            </div>
+            <div className="track-fact-grid">
+              <span><strong>{selectedTrack.measurementLabel}</strong>Measurement basis</span>
+              <span><strong>{selectedTrack.buyingPath}</strong>Buying path</span>
+              <span><strong>{recommendation.length}</strong>Matched products</span>
+            </div>
+          </section>
+
+          <section className="estimator-step-panel">
+            <div className="estimator-section-heading compact-heading">
+              <span className="eyebrow">Step 2</span>
+              <h2>Product-specific requirements</h2>
+              <p>These fields change by product type so Ramani receives the details that matter for that line.</p>
+            </div>
+            <div className="dynamic-field-grid">
+              {selectedTrack.fields.map((field) => (
+                <FieldControl key={field.key} field={field} value={input.spec[field.key]} onChange={updateSpec} />
+              ))}
+            </div>
+          </section>
+
+          <section className="estimator-step-panel">
+            <div className="estimator-section-heading compact-heading">
+              <span className="eyebrow">Step 3</span>
+              <h2>Delivery and follow-up</h2>
+              <p>Ramani uses this to confirm stock, fulfillment, and the correct commercial path.</p>
+            </div>
+            <div className="quote-grid">
+              <label>Urgency<select value={input.urgency} onChange={(event) => setInput({ ...input, urgency: event.target.value })}>{urgencies.map((urgency) => <option key={urgency} value={urgency}>{urgency}</option>)}</select></label>
+              <label>Delivery area<input autoComplete="shipping address-level2" value={input.location} onChange={(event) => setInput({ ...input, location: event.target.value })} /></label>
+              <label>Budget range<input inputMode="text" autoComplete="off" value={input.budget} onChange={(event) => setInput({ ...input, budget: event.target.value })} /></label>
+              <label>Preferred contact<select value={preferredContact} onChange={(event) => setPreferredContact(event.target.value)}><option value="whatsapp">WhatsApp</option><option value="call">Call</option><option value="email">Email</option></select></label>
+            </div>
+            <label className="dynamic-field full-field"><span>Extra notes</span><textarea rows="4" value={input.notes} onChange={(event) => setInput({ ...input, notes: event.target.value })} placeholder="Add site constraints, finish expectations, delivery notes, or product questions." /></label>
+          </section>
+
+          <section className="estimator-step-panel follow-up-panel">
+            <div className="estimator-section-heading compact-heading">
+              <span className="eyebrow">Step 4</span>
+              <h2>Your details</h2>
+            </div>
+            <div className="quote-grid">
+              <label>Name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
+              <label>Phone<input required type="tel" inputMode="tel" autoComplete="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} /></label>
+              <label>Email<input type="email" autoComplete="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label>
+              <label>Customer location<input autoComplete="shipping address-level2" value={customer.location} onChange={(event) => setCustomer({ ...customer, location: event.target.value })} /></label>
+            </div>
+            <div className="estimator-action-row">
+              <button className="button primary" type="submit" disabled={submitting}>{submitting ? 'Sending...' : 'Request product quote'}</button>
+              <a className="button secondary" href={whatsappUrl({ text: whatsappText })} target="_blank" rel="noreferrer">WhatsApp this estimate</a>
+            </div>
+            {message ? <p className="status-text" role="status" aria-live="polite">{message}</p> : null}
+          </section>
         </form>
 
-        <aside className="card-panel recommendation-panel">
-          <span className="eyebrow">Suggested starting list</span>
-          <h2>{recommendation.length ? `${recommendation.length} matched products` : 'Choose categories to begin'}</h2>
-          <p>This is a planning aid. Ramani will confirm final quantities, compatibility, stock, and quote details.</p>
-          <div className="recommendation-list">
+        <aside className="card-panel recommendation-panel product-aware-summary">
+          <span className="eyebrow">Planning outcome</span>
+          <h2>{selectedTrack.buyingPath} sourcing path</h2>
+          <div className="estimate-summary-card">
+            <span>{estimatorSummary.planningBasis}</span>
+            <strong>{estimatorSummary.quantitySignal}</strong>
+          </div>
+          <div className="estimate-metric-grid">
+            <span><strong>{recommendation.length}</strong>Relevant items</span>
+            <span><strong>{formatKes(estimatedSubtotal)}</strong>Listed item total</span>
+          </div>
+          <div className="confirmation-list">
+            <h3>Ramani will confirm</h3>
+            {estimatorSummary.confirmationPoints.map((point) => <span key={point}>{point}</span>)}
+          </div>
+          <div className="recommendation-list product-aware-recommendations">
             {recommendation.map((product) => <article key={product.id}><img src={assetUrl(product.image)} alt="" loading="lazy" decoding="async" /><div><strong>{product.name}</strong><span>{modeLabel(product.buyingMode)} | {product.measurementUnit}</span><small>{product.supportNotes}</small></div><b>{formatKes(product.price)}</b></article>)}
           </div>
           {recommendation.length ? <div className="quote-actions"><button className="button secondary" type="button" onClick={addRecommendedToCart}>Add suitable items to cart</button><a className="button glass" href={whatsappUrl({ text: whatsappText })} target="_blank" rel="noreferrer">Continue on WhatsApp</a></div> : <Link className="button secondary" to="/categories">Browse categories</Link>}
-          {submitted ? <p className="status-text" role="status" aria-live="polite">Saved as a Ramani lead for follow-up.</p> : null}
+          {submitted ? <p className="status-text" role="status" aria-live="polite">Saved as a Ramani product estimate for follow-up.</p> : null}
         </aside>
       </section>
     </main>

@@ -2192,3 +2192,366 @@ textarea { resize: vertical; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Product-aware estimator redesign */
+.estimator-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(120deg, rgba(16,24,32,0.96), rgba(18,78,72,0.9));
+}
+
+.estimator-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+  gap: clamp(1rem, 4vw, 3rem);
+  align-items: end;
+}
+
+.estimator-hero-inner h1 {
+  max-width: 760px;
+}
+
+.estimator-hero-inner p {
+  max-width: 720px;
+}
+
+.estimator-hero-proof {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.estimator-hero-proof span {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-weight: 900;
+  backdrop-filter: blur(10px);
+}
+
+.estimator-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.42fr);
+  gap: clamp(1.1rem, 3vw, 2rem);
+  align-items: start;
+  padding: 54px 0 86px;
+}
+
+.product-aware-form {
+  display: grid;
+  gap: 1.35rem;
+  min-width: 0;
+}
+
+.estimator-section-heading {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.estimator-section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.estimator-section-heading p {
+  max-width: 700px;
+  margin: 0;
+  color: #64748b;
+  line-height: 1.58;
+}
+
+.compact-heading h2 {
+  font-size: clamp(1.08rem, 1.35vw, 1.35rem);
+}
+
+.product-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.product-type-card {
+  position: relative;
+  min-width: 0;
+  min-height: 138px;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.product-type-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: var(--track-color);
+  opacity: 0.55;
+}
+
+.product-type-card:hover,
+.product-type-card.active {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--track-color) 58%, #111827);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.13);
+}
+
+.product-type-card.active::after {
+  height: 7px;
+  opacity: 1;
+}
+
+.product-type-media {
+  min-height: 100%;
+  background: #e2e8f0;
+}
+
+.product-type-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-type-body {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem;
+}
+
+.product-type-body strong,
+.product-type-body small,
+.product-type-body em {
+  overflow-wrap: anywhere;
+}
+
+.track-kicker {
+  width: max-content;
+  max-width: 100%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--track-color) 16%, #fff);
+  color: #0f172a;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.product-type-body strong {
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.product-type-body small {
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.product-type-body em {
+  color: #0f766e;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.selected-track-panel,
+.estimator-step-panel {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2.2vw, 1.45rem);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.selected-track-panel {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.55fr);
+  background: linear-gradient(135deg, #101820, #153f39);
+  color: #fff;
+}
+
+.selected-track-panel p {
+  color: rgba(255,255,255,0.74);
+  line-height: 1.6;
+}
+
+.track-fact-grid {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.track-fact-grid span {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.72);
+}
+
+.track-fact-grid strong {
+  color: #fff;
+}
+
+.dynamic-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.product-aware-form label,
+.dynamic-field {
+  display: grid;
+  gap: 0.38rem;
+  color: var(--ink-2);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.product-aware-form input,
+.product-aware-form select,
+.product-aware-form textarea {
+  width: 100%;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 8px;
+  padding: 0.78rem 0.85rem;
+  background: #fff;
+  color: #111827;
+}
+
+.full-field {
+  grid-column: 1 / -1;
+}
+
+.follow-up-panel {
+  background: #fff;
+}
+
+.estimator-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.product-aware-summary {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 1rem;
+}
+
+.estimate-summary-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #0f766e, #101820);
+}
+
+.estimate-summary-card span {
+  color: rgba(255,255,255,0.72);
+  font-weight: 900;
+}
+
+.estimate-summary-card strong {
+  line-height: 1.45;
+}
+
+.estimate-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.estimate-metric-grid span {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 850;
+}
+
+.estimate-metric-grid strong {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.confirmation-list {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.confirmation-list h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.confirmation-list span {
+  padding: 0.55rem 0.65rem;
+  border-left: 3px solid #0f766e;
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #14532d;
+  font-size: 0.85rem;
+  font-weight: 850;
+}
+
+.product-aware-recommendations article {
+  background: #fff;
+}
+
+@media (max-width: 1080px) {
+  .estimator-workbench,
+  .estimator-hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .product-aware-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .product-type-grid,
+  .selected-track-panel,
+  .dynamic-field-grid,
+  .estimate-metric-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-type-card {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+  .estimator-workbench {
+    padding-top: 34px;
+  }
+  .estimator-action-row .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .product-type-card {
+    grid-template-columns: 1fr;
+  }
+  .product-type-media {
+    height: 150px;
+  }
+}
