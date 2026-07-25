@@ -2637,3 +2637,38 @@ textarea { resize: vertical; }
   background: #0f766e;
   border-color: #0f766e;
 }
+
+/* Homepage hero copy contrast repair */
+.home-hero-copy-contrast,
+.hero-market .hero-copy {
+  color: #ffffff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+}
+
+.hero-market .hero-copy .eyebrow,
+.hero-market .hero-copy h1,
+.hero-market .hero-copy p {
+  color: #ffffff;
+}
+
+.hero-market .hero-copy p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-market .hero-copy .eyebrow {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(16, 24, 32, 0.28);
+  text-shadow: none;
+}
+
+.hero-market .metric-row span {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(16, 24, 32, 0.34);
+  color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hero-market .metric-row strong {
+  color: #ffffff;
+}
