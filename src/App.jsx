@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext';
 import { CompareProvider } from './context/CompareContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import CompareTray from './components/CompareTray';
 import Home from './pages/Home';
 import ProductPage from './components/ProductPage';
 import Categories from './pages/Categories';
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/admin" element={<Admin />} />
             </Routes>
+            <CompareTray />
             <Footer />
           </div>
         </CompareProvider>

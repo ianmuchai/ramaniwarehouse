@@ -62,6 +62,9 @@ export default function Header() {
           <nav className="nav" aria-label="Primary navigation">
             <NavLink to="/" className="nav-link">Home</NavLink>
             <NavLink to="/categories" className="nav-link">Categories</NavLink>
+            <NavLink to="/estimator" className="nav-link">Estimator</NavLink>
+            <NavLink to="/resources" className="nav-link">Resources</NavLink>
+            <NavLink to="/contact" className="nav-link">Quote</NavLink>
           </nav>
 
           <div className="header-actions">
