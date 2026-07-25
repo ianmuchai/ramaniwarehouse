@@ -1,0 +1,15 @@
+[
+  {
+    "id": "ramani-nairobi-support",
+    "name": "Ramani Warehouse Nairobi Support",
+    "type": "support",
+    "location": "Old Castle breweries next to Vincentian Retreat Center, Nairobi",
+    "coverageAreas": ["Nairobi", "Kiambu", "Machakos", "Kajiado"],
+    "phone": "+254 793 371994",
+    "whatsapp": "+254793371994",
+    "email": "info@ramaniwarehouse.com",
+    "categories": ["Eco Board", "HDPE Plastics", "Glass Recycling", "PPR Pipes & Fittings", "Interior Design", "Detergent & Grease", "Furniture"],
+    "public": true,
+    "notes": "Primary sales, quote, and fulfillment coordination contact."
+  }
+]

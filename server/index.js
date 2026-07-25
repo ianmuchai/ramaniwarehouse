@@ -113,7 +113,26 @@ function saveHeroSlides() {
   fs.writeFileSync(heroPath, JSON.stringify(heroSlides, null, 2));
 }
 
+function readJsonFile(filePath, fallback) {
+  try {
+    if (!fs.existsSync(filePath)) return fallback;
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch (error) {
+    console.error(`Could not read ${path.basename(filePath)}:`, error.message);
+    return fallback;
+  }
+}
+
+function writeJsonFile(filePath, value) {
+  fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+}
+
 let heroSlides = loadHeroSlides();
+let leads = readJsonFile(leadsPath, []);
+let resources = readJsonFile(resourcesPath, []);
+let partners = readJsonFile(partnersPath, []);
+let analyticsEvents = readJsonFile(analyticsPath, []);
 const posterSpecs = [
   { name: 'Homepage hero carousel', pixels: '1600 x 820', ratio: '80:41', safeArea: 'Keep text-free subject matter inside the center 1280 x 620 area.' },
   { name: 'Category carousel poster', pixels: '1200 x 720', ratio: '5:3', safeArea: 'Keep product/category focus inside the center 980 x 560 area.' },
@@ -251,8 +270,50 @@ function normalizeHeroSlide(payload, existing = {}) {
     href: String(payload.href || existing.href || '/categories').trim()
   };
 }
+const leadStatuses = new Set(['new', 'contacted', 'quoted', 'won', 'lost', 'archived']);
+
+function normalizeCustomer(value = {}) {
+  return {
+    name: String(value.name || '').trim(),
+    phone: String(value.phone || '').trim(),
+    email: String(value.email || '').trim(),
+    company: String(value.company || '').trim(),
+    location: String(value.location || '').trim()
+  };
+}
+
+function normalizeLead(payload = {}, sourceOverride) {
+  const customer = normalizeCustomer(payload.customer || {});
+  if (!customer.name) return { error: 'Name is required.' };
+  if (!customer.phone) return { error: 'Phone is required.' };
+
+  const now = new Date().toISOString();
+  return {
+    id: `LEAD-${Date.now()}`,
+    createdAt: now,
+    updatedAt: now,
+    source: String(sourceOverride || payload.source || 'contact').trim(),
+    status: 'new',
+    customer,
+    interest: {
+      products: Array.isArray(payload.interest?.products) ? payload.interest.products : [],
+      categories: Array.isArray(payload.interest?.categories) ? payload.interest.categories : [],
+      budget: String(payload.interest?.budget || '').trim(),
+      timeline: String(payload.interest?.timeline || '').trim(),
+      notes: String(payload.interest?.notes || '').trim()
+    },
+    preferredContact: String(payload.preferredContact || 'whatsapp').trim(),
+    estimator: payload.estimator || null,
+    adminNotes: []
+  };
+}
+
+function publicResource(resource) {
+  return resource.status === 'published';
+}
+
 function sitePayload() {
-  return { profile: siteProfile, heroSlides, categories, products };
+  return { profile: siteProfile, heroSlides, categories, products, resources: resources.filter(publicResource) };
 }
 
 function requireAdmin(req, res, next) {
@@ -270,7 +331,93 @@ app.get('/api/products/:id', (req, res) => {
 });
 app.get('/api/categories', (req, res) => res.json(categories));
 app.get('/api/poster-specs', (req, res) => res.json(posterSpecs));
+app.get('/api/resources', (req, res) => res.json(resources.filter(publicResource)));
+app.get('/api/resources/:slug', (req, res) => {
+  const resource = resources.find((entry) => entry.slug === req.params.slug && publicResource(entry));
+  if (!resource) return res.status(404).json({ message: 'Resource not found.' });
+  return res.json(resource);
+});
+app.get('/api/partners/public', (req, res) => res.json(partners.filter((entry) => entry.public)));
+app.post('/api/leads', (req, res) => {
+  const normalized = normalizeLead(req.body);
+  if (normalized.error) return res.status(400).json({ message: normalized.error });
+  leads = [normalized, ...leads];
+  writeJsonFile(leadsPath, leads);
+  return res.status(201).json({ success: true, lead: normalized });
+});
+app.post('/api/estimator', (req, res) => {
+  const normalized = normalizeLead({
+    source: 'estimator',
+    customer: req.body.customer,
+    interest: {
+      products: req.body.recommendation?.products || [],
+      categories: req.body.input?.categories || [],
+      budget: req.body.input?.budget || '',
+      timeline: req.body.input?.urgency || '',
+      notes: req.body.input?.notes || ''
+    },
+    preferredContact: req.body.preferredContact || 'whatsapp',
+    estimator: { input: req.body.input || {}, recommendation: req.body.recommendation || {} }
+  }, 'estimator');
+  if (normalized.error) return res.status(400).json({ message: normalized.error });
+  leads = [normalized, ...leads];
+  writeJsonFile(leadsPath, leads);
+  return res.status(201).json({ success: true, lead: normalized });
+});
+app.post('/api/analytics/events', (req, res) => {
+  const event = {
+    id: `EVT-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    type: String(req.body.type || 'unknown').trim(),
+    source: String(req.body.source || '').trim(),
+    productId: req.body.productId || null,
+    categoryId: req.body.categoryId || null,
+    metadata: req.body.metadata || {}
+  };
+  analyticsEvents = [event, ...analyticsEvents].slice(0, 1000);
+  writeJsonFile(analyticsPath, analyticsEvents);
+  return res.status(201).json({ success: true });
+});
 app.use('/api/admin', requireAdmin);
+app.get('/api/admin/dashboard', (req, res) => {
+  const statusCounts = leads.reduce((counts, lead) => {
+    counts[lead.status] = (counts[lead.status] || 0) + 1;
+    return counts;
+  }, {});
+  const sourceCounts = leads.reduce((counts, lead) => {
+    counts[lead.source] = (counts[lead.source] || 0) + 1;
+    return counts;
+  }, {});
+  return res.json({
+    leadsTotal: leads.length,
+    statusCounts,
+    sourceCounts,
+    estimatorSubmissions: leads.filter((lead) => lead.source === 'estimator').length,
+    analyticsTotal: analyticsEvents.length,
+    recentLeads: leads.slice(0, 5)
+  });
+});
+app.get('/api/admin/leads', (req, res) => res.json(leads));
+app.put('/api/admin/leads/:id', (req, res) => {
+  const lead = leads.find((entry) => entry.id === req.params.id);
+  if (!lead) return res.status(404).json({ message: 'Lead not found.' });
+  const status = String(req.body.status || lead.status).trim();
+  if (!leadStatuses.has(status)) return res.status(400).json({ message: 'Invalid lead status.' });
+  lead.status = status;
+  lead.updatedAt = new Date().toISOString();
+  writeJsonFile(leadsPath, leads);
+  return res.json({ success: true, lead, leads });
+});
+app.post('/api/admin/leads/:id/notes', (req, res) => {
+  const lead = leads.find((entry) => entry.id === req.params.id);
+  if (!lead) return res.status(404).json({ message: 'Lead not found.' });
+  const text = String(req.body.text || '').trim();
+  if (!text) return res.status(400).json({ message: 'Note text is required.' });
+  lead.adminNotes = [{ id: `NOTE-${Date.now()}`, createdAt: new Date().toISOString(), text }, ...(lead.adminNotes || [])];
+  lead.updatedAt = new Date().toISOString();
+  writeJsonFile(leadsPath, leads);
+  return res.status(201).json({ success: true, lead, leads });
+});
 app.get('/api/admin/poster-specs', (req, res) => res.json(posterSpecs));
 app.get('/api/admin/hero-slides', (req, res) => res.json(heroSlides));
 
