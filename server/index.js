@@ -28,9 +28,56 @@ const resourcesPath = path.join(dataDir, 'resources.json');
 const partnersPath = path.join(dataDir, 'partners.json');
 const analyticsPath = path.join(dataDir, 'analytics-events.json');
 const adminKey = process.env.ADMIN_KEY || 'ramani-admin';
+const usesBlobStorage = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+let blobModulePromise = null;
+let blobDataPromise = null;
 
-fs.mkdirSync(imageDir, { recursive: true });
-fs.mkdirSync(dataDir, { recursive: true });
+if (!usesBlobStorage) {
+  fs.mkdirSync(imageDir, { recursive: true });
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+function getBlobModule() {
+  if (!blobModulePromise) blobModulePromise = import('@vercel/blob');
+  return blobModulePromise;
+}
+
+function dataBlobPath(filePath) {
+  return `data/${path.basename(filePath)}`;
+}
+
+async function readJsonBlob(filePath, fallback) {
+  if (!usesBlobStorage) return fallback;
+  const blobPath = dataBlobPath(filePath);
+  try {
+    const { list } = await getBlobModule();
+    const result = await list({ prefix: blobPath, limit: 1 });
+    const blob = result.blobs.find((entry) => entry.pathname === blobPath);
+    if (!blob) return fallback;
+    const response = await fetch(blob.url, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`Blob returned ${response.status}`);
+    const parsed = await response.json();
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch (error) {
+    console.error(`Could not load ${path.basename(filePath)} from Blob:`, error.message);
+    return fallback;
+  }
+}
+
+async function writeJsonFile(filePath, value) {
+  const json = JSON.stringify(value, null, 2);
+  if (usesBlobStorage) {
+    const { put } = await getBlobModule();
+    await put(dataBlobPath(filePath), json, {
+      access: 'public',
+      allowOverwrite: true,
+      contentType: 'application/json',
+      cacheControlMaxAge: 60
+    });
+    return;
+  }
+  fs.writeFileSync(filePath, json);
+}
 
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
@@ -64,8 +111,8 @@ function loadCategories() {
   }
 }
 
-function saveCategories() {
-  fs.writeFileSync(categoriesPath, JSON.stringify(categories, null, 2));
+async function saveCategories() {
+  await writeJsonFile(categoriesPath, categories);
 }
 
 let categories = loadCategories();
@@ -92,8 +139,8 @@ function loadProducts() {
   }
 }
 
-function saveProducts() {
-  fs.writeFileSync(catalogPath, JSON.stringify(products, null, 2));
+async function saveProducts() {
+  await writeJsonFile(catalogPath, products);
 }
 
 let products = loadProducts();
@@ -113,8 +160,8 @@ function loadHeroSlides() {
   }
 }
 
-function saveHeroSlides() {
-  fs.writeFileSync(heroPath, JSON.stringify(heroSlides, null, 2));
+async function saveHeroSlides() {
+  await writeJsonFile(heroPath, heroSlides);
 }
 
 function readJsonFile(filePath, fallback) {
@@ -128,15 +175,36 @@ function readJsonFile(filePath, fallback) {
   }
 }
 
-function writeJsonFile(filePath, value) {
-  fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
-}
-
 let heroSlides = loadHeroSlides();
 let leads = readJsonFile(leadsPath, []);
 let resources = readJsonFile(resourcesPath, []);
 let partners = readJsonFile(partnersPath, []);
 let analyticsEvents = readJsonFile(analyticsPath, []);
+
+async function hydrateStoredData() {
+  if (!usesBlobStorage) return;
+  if (!blobDataPromise) {
+    blobDataPromise = (async () => {
+      const [storedHeroSlides, storedCategories, storedProducts, storedLeads, storedResources, storedPartners, storedAnalyticsEvents] = await Promise.all([
+        readJsonBlob(heroPath, heroSlides),
+        readJsonBlob(categoriesPath, categories),
+        readJsonBlob(catalogPath, products),
+        readJsonBlob(leadsPath, leads),
+        readJsonBlob(resourcesPath, resources),
+        readJsonBlob(partnersPath, partners),
+        readJsonBlob(analyticsPath, analyticsEvents)
+      ]);
+      heroSlides = storedHeroSlides;
+      categories = storedCategories;
+      products = storedProducts;
+      leads = storedLeads;
+      resources = storedResources;
+      partners = storedPartners;
+      analyticsEvents = storedAnalyticsEvents;
+    })();
+  }
+  await blobDataPromise;
+}
 const posterSpecs = [
   { name: 'Homepage hero carousel', pixels: '1600 x 820', ratio: '80:41', safeArea: 'Keep text-free subject matter inside the center 1280 x 620 area.' },
   { name: 'Category carousel poster', pixels: '1200 x 720', ratio: '5:3', safeArea: 'Keep product/category focus inside the center 980 x 560 area.' },
@@ -159,7 +227,7 @@ const siteProfile = {
 const browserSafeImageExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg', '.bmp']);
 const acceptedImageExtensions = new Set([...browserSafeImageExtensions, '.tif', '.tiff', '.heic', '.heif', '.jfif', '.pjpeg', '.pjp']);
 
-const storage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, imageDir),
   filename: (req, file, cb) => {
     const parsed = path.parse(file.originalname || 'upload');
@@ -175,7 +243,7 @@ function isAcceptedImage(file) {
 }
 
 const upload = multer({
-  storage,
+  storage: usesBlobStorage ? multer.memoryStorage() : diskStorage,
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (isAcceptedImage(file)) return cb(null, true);
@@ -185,9 +253,36 @@ const upload = multer({
   }
 });
 
+function safeUploadBase(value) {
+  return String(value || 'image').replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '') || 'image';
+}
+
 async function imageUrlFromFile(file) {
+  const sourceName = file.originalname || file.filename || 'upload';
+  const ext = path.extname(sourceName).toLowerCase();
+
+  if (usesBlobStorage) {
+    const { put } = await getBlobModule();
+    let outputExt = ext || '.jpg';
+    let contentType = file.mimetype || 'application/octet-stream';
+    let body = file.buffer || fs.readFileSync(file.path);
+
+    if (sharp && !browserSafeImageExtensions.has(ext)) {
+      body = await sharp(body).rotate().webp({ quality: 84 }).toBuffer();
+      outputExt = '.webp';
+      contentType = 'image/webp';
+    }
+
+    const base = safeUploadBase(path.basename(sourceName, ext));
+    const blob = await put(`images/${Date.now()}-${base}${outputExt}`, body, {
+      access: 'public',
+      contentType,
+      addRandomSuffix: true
+    });
+    return blob.url;
+  }
+
   const originalPath = file.path;
-  const ext = path.extname(file.originalname || file.filename || '').toLowerCase();
   if (!sharp || browserSafeImageExtensions.has(ext)) return `/images/${file.filename}`;
 
   const outputName = `${path.basename(file.filename, path.extname(file.filename))}.webp`;
@@ -201,7 +296,6 @@ async function imageUrlFromFile(file) {
     return `/images/${file.filename}`;
   }
 }
-
 function nextProductId() {
   return products.reduce((max, product) => Math.max(max, Number(product.id) || 0), 0) + 1;
 }
@@ -328,6 +422,14 @@ function requireAdmin(req, res, next) {
   return next();
 }
 
+app.use('/api', async (req, res, next) => {
+  try {
+    await hydrateStoredData();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 app.get('/api/site', (req, res) => res.json(sitePayload()));
 app.get('/api/products', (req, res) => res.json(products));
 app.get('/api/products/:id', (req, res) => {
@@ -344,14 +446,14 @@ app.get('/api/resources/:slug', (req, res) => {
   return res.json(resource);
 });
 app.get('/api/partners/public', (req, res) => res.json(partners.filter((entry) => entry.public)));
-app.post('/api/leads', (req, res) => {
+app.post('/api/leads', async (req, res) => {
   const normalized = normalizeLead(req.body);
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   leads = [normalized, ...leads];
-  writeJsonFile(leadsPath, leads);
+  await writeJsonFile(leadsPath, leads);
   return res.status(201).json({ success: true, lead: normalized });
 });
-app.post('/api/estimator', (req, res) => {
+app.post('/api/estimator', async (req, res) => {
   const normalized = normalizeLead({
     source: 'estimator',
     customer: req.body.customer,
@@ -367,10 +469,10 @@ app.post('/api/estimator', (req, res) => {
   }, 'estimator');
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   leads = [normalized, ...leads];
-  writeJsonFile(leadsPath, leads);
+  await writeJsonFile(leadsPath, leads);
   return res.status(201).json({ success: true, lead: normalized });
 });
-app.post('/api/analytics/events', (req, res) => {
+app.post('/api/analytics/events', async (req, res) => {
   const event = {
     id: `EVT-${Date.now()}`,
     createdAt: new Date().toISOString(),
@@ -381,7 +483,7 @@ app.post('/api/analytics/events', (req, res) => {
     metadata: req.body.metadata || {}
   };
   analyticsEvents = [event, ...analyticsEvents].slice(0, 1000);
-  writeJsonFile(analyticsPath, analyticsEvents);
+  await writeJsonFile(analyticsPath, analyticsEvents);
   return res.status(201).json({ success: true });
 });
 app.use('/api/admin', requireAdmin);
@@ -404,36 +506,36 @@ app.get('/api/admin/dashboard', (req, res) => {
   });
 });
 app.get('/api/admin/leads', (req, res) => res.json(leads));
-app.put('/api/admin/leads/:id', (req, res) => {
+app.put('/api/admin/leads/:id', async (req, res) => {
   const lead = leads.find((entry) => entry.id === req.params.id);
   if (!lead) return res.status(404).json({ message: 'Lead not found.' });
   const status = String(req.body.status || lead.status).trim();
   if (!leadStatuses.has(status)) return res.status(400).json({ message: 'Invalid lead status.' });
   lead.status = status;
   lead.updatedAt = new Date().toISOString();
-  writeJsonFile(leadsPath, leads);
+  await writeJsonFile(leadsPath, leads);
   return res.json({ success: true, lead, leads });
 });
-app.post('/api/admin/leads/:id/notes', (req, res) => {
+app.post('/api/admin/leads/:id/notes', async (req, res) => {
   const lead = leads.find((entry) => entry.id === req.params.id);
   if (!lead) return res.status(404).json({ message: 'Lead not found.' });
   const text = String(req.body.text || '').trim();
   if (!text) return res.status(400).json({ message: 'Note text is required.' });
   lead.adminNotes = [{ id: `NOTE-${Date.now()}`, createdAt: new Date().toISOString(), text }, ...(lead.adminNotes || [])];
   lead.updatedAt = new Date().toISOString();
-  writeJsonFile(leadsPath, leads);
+  await writeJsonFile(leadsPath, leads);
   return res.status(201).json({ success: true, lead, leads });
 });
 app.get('/api/admin/poster-specs', (req, res) => res.json(posterSpecs));
 app.get('/api/admin/hero-slides', (req, res) => res.json(heroSlides));
 
-app.put('/api/admin/hero-slides/:id', (req, res) => {
+app.put('/api/admin/hero-slides/:id', async (req, res) => {
   const index = heroSlides.findIndex((entry) => String(entry.id) === String(req.params.id));
   if (index === -1) return res.status(404).json({ message: 'Hero slide not found.' });
   const normalized = normalizeHeroSlide(req.body, heroSlides[index]);
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   heroSlides[index] = normalized;
-  saveHeroSlides();
+  await saveHeroSlides();
   return res.json({ success: true, slide: heroSlides[index], heroSlides });
 });
 
@@ -443,19 +545,19 @@ app.post('/api/admin/hero-slides/:id/image', upload.single('image'), async (req,
   if (!slide) return res.status(404).json({ message: 'Hero slide not found.' });
   const imageUrl = await imageUrlFromFile(req.file);
   slide.image = imageUrl;
-  saveHeroSlides();
+  await saveHeroSlides();
   return res.json({ success: true, imageUrl, slide, heroSlides });
 });
 
 app.get('/api/admin/categories', (req, res) => res.json(categories));
 
-app.put('/api/admin/categories/:id', (req, res) => {
+app.put('/api/admin/categories/:id', async (req, res) => {
   const index = categories.findIndex((entry) => String(entry.id) === String(req.params.id));
   if (index === -1) return res.status(404).json({ message: 'Featured collection not found.' });
   const normalized = normalizeCategory(req.body, categories[index]);
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   categories[index] = normalized;
-  saveCategories();
+  await saveCategories();
   return res.json({ success: true, category: categories[index], categories });
 });
 
@@ -465,36 +567,36 @@ app.post('/api/admin/categories/:id/image', upload.single('image'), async (req, 
   if (!category) return res.status(404).json({ message: 'Featured collection not found.' });
   const imageUrl = await imageUrlFromFile(req.file);
   category.image = imageUrl;
-  saveCategories();
+  await saveCategories();
   return res.json({ success: true, imageUrl, category, categories });
 });
 
 app.get('/api/admin/products', (req, res) => res.json(products));
 
-app.post('/api/admin/products', (req, res) => {
+app.post('/api/admin/products', async (req, res) => {
   const normalized = normalizeProduct(req.body);
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   const product = { id: nextProductId(), ...normalized };
   products = [product, ...products];
-  saveProducts();
+  await saveProducts();
   return res.status(201).json({ success: true, product, products });
 });
 
-app.put('/api/admin/products/:id', (req, res) => {
+app.put('/api/admin/products/:id', async (req, res) => {
   const index = products.findIndex((entry) => String(entry.id) === String(req.params.id));
   if (index === -1) return res.status(404).json({ message: 'Product not found.' });
   const normalized = normalizeProduct(req.body, products[index]);
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   products[index] = { ...normalized, id: products[index].id };
-  saveProducts();
+  await saveProducts();
   return res.json({ success: true, product: products[index], products });
 });
 
-app.delete('/api/admin/products/:id', (req, res) => {
+app.delete('/api/admin/products/:id', async (req, res) => {
   const exists = products.some((entry) => String(entry.id) === String(req.params.id));
   if (!exists) return res.status(404).json({ message: 'Product not found.' });
   products = products.filter((entry) => String(entry.id) !== String(req.params.id));
-  saveProducts();
+  await saveProducts();
   return res.json({ success: true, products });
 });
 
@@ -510,7 +612,7 @@ app.post('/api/admin/products/:id/image', upload.single('image'), async (req, re
   const imageUrl = await imageUrlFromFile(req.file);
   product.image = imageUrl;
   product.gallery = [imageUrl, ...(product.gallery || []).filter((image) => image !== imageUrl)].slice(0, 4);
-  saveProducts();
+  await saveProducts();
   return res.json({ success: true, imageUrl, product, products });
 });
 
@@ -524,7 +626,7 @@ app.post('/api/admin/products/:id/gallery/:index/image', upload.single('image'),
   gallery[index] = imageUrl;
   product.gallery = gallery.filter(Boolean).slice(0, 6);
   if (index === 0 || !product.image) product.image = imageUrl;
-  saveProducts();
+  await saveProducts();
   return res.json({ success: true, imageUrl, product, products });
 });
 
@@ -573,6 +675,10 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+
+
+
 
 
 
