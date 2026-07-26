@@ -179,7 +179,9 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (isAcceptedImage(file)) return cb(null, true);
-    return cb(new Error('Upload an image file: JPG, PNG, WebP, GIF, AVIF, SVG, BMP, TIFF, HEIC, or HEIF.'));
+    const uploadError = new Error('Upload an image file: JPG, PNG, WebP, GIF, AVIF, SVG, BMP, TIFF, HEIC, or HEIF.');
+    uploadError.status = 400;
+    return cb(uploadError);
   }
 });
 
@@ -557,6 +559,13 @@ app.post('/api/checkout', async (req, res) => {
   return res.json({ url: null, orderId: `RW-${Date.now()}`, paymentMode: 'demo' });
 });
 
+app.use('/api', (error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  const status = error.status || error.statusCode || 500;
+  if (status >= 500) console.error(error);
+  return res.status(status).json({ message: error.message || 'Server error.' });
+});
+
 if (require.main === module) {
   app.listen(port, () => {
     console.log(`Ramani Warehouse backend listening on port ${port}`);
@@ -564,3 +573,6 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+
+

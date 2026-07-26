@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { assetUrl } from '../utils/assets';
+import { parseAdminResponse } from '../utils/adminApi.mjs';
 
 const PHOTO_ACCEPT = 'image/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.svg,.bmp,.tif,.tiff,.heic,.heif,.jfif,.pjpeg,.pjp';
 
@@ -155,8 +156,7 @@ export default function Admin() {
       const response = await fetch(`/api/admin/hero-slides/${selectedHeroId}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify(heroForm)
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Hero slide save failed.');
+      const data = await parseAdminResponse(response, 'Hero slide save failed.');
       setHeroSlides(data.heroSlides || []);
       setHeroForm(heroFormFromSlide(data.slide));
       setHeroMessage('Hero carousel slide updated.');
@@ -177,8 +177,7 @@ export default function Admin() {
       const formData = new FormData();
       formData.append('image', file);
       const response = await fetch(`/api/admin/hero-slides/${selectedHeroId}/image`, { method: 'POST', headers: adminHeaders, body: formData });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Upload failed.');
+      const data = await parseAdminResponse(response, 'Hero picture upload failed.');
       setHeroSlides(data.heroSlides || []);
       setHeroForm(heroFormFromSlide(data.slide));
       event.target.reset();
@@ -210,8 +209,7 @@ export default function Admin() {
       const response = await fetch(`/api/admin/categories/${selectedCategoryId}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify(categoryForm)
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Featured collection save failed.');
+      const data = await parseAdminResponse(response, 'Featured collection save failed.');
       setCategories(data.categories || []);
       setCategoryForm(categoryFormFromCategory(data.category));
       setCategoryMessage('Featured collection slide updated.');
@@ -232,8 +230,7 @@ export default function Admin() {
       const formData = new FormData();
       formData.append('image', file);
       const response = await fetch(`/api/admin/categories/${selectedCategoryId}/image`, { method: 'POST', headers: adminHeaders, body: formData });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Upload failed.');
+      const data = await parseAdminResponse(response, 'Featured collection poster upload failed.');
       setCategories(data.categories || []);
       setCategoryForm(categoryFormFromCategory(data.category));
       event.target.reset();
@@ -255,8 +252,7 @@ export default function Admin() {
       const endpoint = selectedId === 'new' ? '/api/admin/products' : `/api/admin/products/${selectedId}`;
       const method = selectedId === 'new' ? 'POST' : 'PUT';
       const response = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify(form) });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Save failed.');
+      const data = await parseAdminResponse(response, 'Save failed.');
       setProducts(data.products || []); setSelectedId(String(data.product.id)); setForm(formFromProduct(data.product)); setMessage(selectedId === 'new' ? 'Product added.' : 'Product updated.');
     } catch (error) { setMessage(error.message || 'Could not save product.'); } finally { setSaving(false); }
   }
@@ -270,8 +266,7 @@ export default function Admin() {
     try {
       const formData = new FormData(); formData.append('image', file);
       const response = await fetch(`/api/admin/products/${selectedId}/image`, { method: 'POST', headers: adminHeaders, body: formData });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Upload failed.');
+      const data = await parseAdminResponse(response, 'Main product picture upload failed.');
       setProducts(data.products || []); setForm(formFromProduct(data.product)); setMessage('Main product picture replaced.'); event.target.reset();
     } catch (error) { setMessage(error.message || 'Picture upload failed.'); } finally { setUploading(false); }
   }
@@ -285,8 +280,7 @@ export default function Admin() {
     try {
       const formData = new FormData(); formData.append('image', file);
       const response = await fetch(`/api/admin/products/${selectedId}/gallery/${index}/image`, { method: 'POST', headers: adminHeaders, body: formData });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Gallery upload failed.');
+      const data = await parseAdminResponse(response, 'Gallery picture upload failed.');
       setProducts(data.products || []); setForm(formFromProduct(data.product)); setMessage(`Gallery photo ${index + 1} replaced.`); event.target.reset();
     } catch (error) { setMessage(error.message || 'Gallery picture upload failed.'); } finally { setGalleryUploading(null); }
   }
@@ -298,8 +292,7 @@ export default function Admin() {
       const response = await fetch(`/api/admin/leads/${id}`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ status })
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Lead update failed.');
+      const data = await parseAdminResponse(response, 'Lead update failed.');
       setLeads(data.leads || []);
       setLeadMessage('Lead status updated.');
     } catch (error) {
@@ -315,8 +308,7 @@ export default function Admin() {
       const response = await fetch(`/api/admin/leads/${selectedLeadId}/notes`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ text: leadNote })
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Note save failed.');
+      const data = await parseAdminResponse(response, 'Note save failed.');
       setLeads(data.leads || []);
       setLeadNote('');
       setLeadMessage('Note added.');
@@ -339,8 +331,7 @@ export default function Admin() {
     setSaving(true); setMessage('Deleting product...');
     try {
       const response = await fetch(`/api/admin/products/${selectedId}`, { method: 'DELETE', headers: adminHeaders });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Delete failed.');
+      const data = await parseAdminResponse(response, 'Delete failed.');
       setProducts(data.products || []); setSelectedId('new'); setForm(emptyForm); setMessage('Product deleted.');
     } catch (error) { setMessage(error.message || 'Could not delete product.'); } finally { setSaving(false); }
   }
@@ -506,3 +497,6 @@ export default function Admin() {
     </main>
   );
 }
+
+
+

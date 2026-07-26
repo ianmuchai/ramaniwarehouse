@@ -8,7 +8,7 @@
     "scripts":  {
                     "dev":  "concurrently \"vite\" \"npm run start --prefix server\"",
                     "build":  "vite build",
-                    "test":  "node scripts/standards-check.mjs && node scripts/estimator-logic-check.mjs",
+                    "test":  "node scripts/standards-check.mjs && node scripts/estimator-logic-check.mjs && node scripts/admin-api-response-check.mjs && node scripts/upload-error-json-check.mjs",
                     "preview":  "vite preview",
                     "start":  "npm run start --prefix server"
                 },
@@ -31,3 +31,4 @@
                             "vite":  "^5.4.10"
                         }
 }
+
