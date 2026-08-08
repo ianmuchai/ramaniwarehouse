@@ -16,14 +16,14 @@ export default function Account() {
         <article className="card-panel account-card">
           <span className="eyebrow">Orders</span>
           <h2>Order tracking</h2>
-          <p>Keep warehouse orders, payment status, and fulfillment updates in one customer space.</p>
-          <Link className="button primary" to="/checkout">Go to checkout</Link>
+          <p>Keep warehouse orders, quote status, and fulfillment updates in one customer space.</p>
+          <Link className="button primary" to="/checkout">Open quote list</Link>
         </article>
 
         <article className="card-panel account-card">
           <span className="eyebrow">Projects</span>
           <h2>Saved sourcing lists</h2>
-          <p>Use the storefront cart today. Saved lists and repeat orders can be connected to user accounts later.</p>
+          <p>Use the storefront quote list today. Saved lists and repeat requests can be connected to user accounts later.</p>
           <Link className="button secondary" to="/categories">Browse categories</Link>
         </article>
       </section>

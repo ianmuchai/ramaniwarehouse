@@ -12,7 +12,7 @@ export default function Checkout() {
   async function submit(event) {
     event.preventDefault();
     if (!cart.length) {
-      setMessage('Your cart is empty. Add a product first.');
+      setMessage('Your quote list is empty. Add a product first.');
       return;
     }
 
@@ -68,9 +68,9 @@ export default function Checkout() {
         </form>
 
         <aside className="order-summary card-panel">
-          <h2>Order summary</h2>
+          <h2>Quote summary</h2>
           {cart.length === 0 ? (
-            <div className="empty-cart"><p>No items in cart.</p><Link className="button secondary" to="/categories">Browse products</Link></div>
+            <div className="empty-cart"><p>No items in your quote list.</p><Link className="button secondary" to="/categories">Browse products</Link></div>
           ) : (
             <>
               <div className="cart-lines">

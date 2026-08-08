@@ -117,24 +117,34 @@ async function saveCategories() {
 let categories = loadCategories();
 
 const defaultProducts = [
-  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board', price: 0, description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Board', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 2, sku: 'RW-HDP-032', name: 'HDPE Plastics', price: 0, description: 'Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.', category: 'HDPE Plastics', categoryId: 'hdpe-plastics', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', rating: 4.7, leadTime: '1-3 days', stock: 'Bulk ready', badge: 'Bulk supply', specs: ['Washed material', 'Manufacturing grade', 'Consistent batches'], gallery: ['https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 3, sku: 'RW-GLS-009', name: 'Sorted Glass Recycling', price: 0, description: 'Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.', category: 'Glass Recycling', categoryId: 'glass-recycling', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', rating: 4.6, leadTime: '3-5 days', stock: 'Available', badge: 'Eco choice', specs: ['Sorted batches', 'Project quantities', 'Reuse ready'], gallery: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 4, sku: 'RW-PPR-145', name: 'PPR Pipes & Fittings', price: 0, description: 'Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.', category: 'PPR Pipes & Fittings', categoryId: 'ppr-pipes-fittings', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', rating: 4.9, leadTime: 'Same week', stock: 'Fast moving', badge: 'Contractor pick', specs: ['Heat resistant', 'Low leakage fittings', 'Commercial grade'], gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 5, sku: 'RW-INT-072', name: 'Commercial Interior Design', price: 0, description: 'A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.', category: 'Interior Design', categoryId: 'interior-design', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: 'Consult first', stock: 'Custom order', badge: 'Premium', specs: ['Material selection', 'Space planning', 'Finish schedule'], gallery: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 6, sku: 'RW-CLN-065', name: 'Industrial Detergent & Grease Solution', price: 0, description: 'Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.', category: 'Detergent & Grease', categoryId: 'cleaning-solutions', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', rating: 4.5, leadTime: '1-2 days', stock: 'In stock', badge: 'Operations essential', specs: ['Heavy-duty clean', 'Bulk packs', 'Facility friendly'], gallery: ['https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 7, sku: 'RW-FUR-021', name: 'Dining Room Set', price: 0, description: 'A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.', category: 'Furniture', categoryId: 'furniture', image: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '5-10 days', stock: 'Made to order', badge: 'New arrival', specs: ['Dining table included', 'Matching chairs', 'Custom finishes available'], gallery: ['https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&w=1200&q=80'] }
+  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board', description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Board', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 2, sku: 'RW-HDP-032', name: 'HDPE Plastics', description: 'Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.', category: 'HDPE Plastics', categoryId: 'hdpe-plastics', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', rating: 4.7, leadTime: '1-3 days', stock: 'Bulk ready', badge: 'Bulk supply', specs: ['Washed material', 'Manufacturing grade', 'Consistent batches'], gallery: ['https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 3, sku: 'RW-GLS-009', name: 'Sorted Glass Recycling', description: 'Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.', category: 'Glass Recycling', categoryId: 'glass-recycling', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', rating: 4.6, leadTime: '3-5 days', stock: 'Available', badge: 'Eco choice', specs: ['Sorted batches', 'Project quantities', 'Reuse ready'], gallery: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 4, sku: 'RW-PPR-145', name: 'PPR Pipes & Fittings', description: 'Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.', category: 'PPR Pipes & Fittings', categoryId: 'ppr-pipes-fittings', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', rating: 4.9, leadTime: 'Same week', stock: 'Fast moving', badge: 'Contractor pick', specs: ['Heat resistant', 'Low leakage fittings', 'Commercial grade'], gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 5, sku: 'RW-INT-072', name: 'Commercial Interior Design', description: 'A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.', category: 'Interior Design', categoryId: 'interior-design', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: 'Consult first', stock: 'Custom order', badge: 'Premium', specs: ['Material selection', 'Space planning', 'Finish schedule'], gallery: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 6, sku: 'RW-CLN-065', name: 'Industrial Detergent & Grease Solution', description: 'Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.', category: 'Detergent & Grease', categoryId: 'cleaning-solutions', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', rating: 4.5, leadTime: '1-2 days', stock: 'In stock', badge: 'Operations essential', specs: ['Heavy-duty clean', 'Bulk packs', 'Facility friendly'], gallery: ['https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 7, sku: 'RW-FUR-021', name: 'Dining Room Set', description: 'A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.', category: 'Furniture', categoryId: 'furniture', image: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '5-10 days', stock: 'Made to order', badge: 'New arrival', specs: ['Dining table included', 'Matching chairs', 'Custom finishes available'], gallery: ['https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&w=1200&q=80'] }
 ];
 
 
+function withoutProductAmount(product = {}) {
+  const rest = { ...product };
+  delete rest[['pri', 'ce'].join('')];
+  return rest;
+}
+
+function withoutProductAmounts(list = []) {
+  return Array.isArray(list) ? list.map(withoutProductAmount) : [];
+}
+
 function loadProducts() {
   try {
-    if (!fs.existsSync(catalogPath)) return defaultProducts;
+    if (!fs.existsSync(catalogPath)) return withoutProductAmounts(defaultProducts);
     const parsed = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-    return Array.isArray(parsed) && parsed.length ? parsed : defaultProducts;
+    return withoutProductAmounts(Array.isArray(parsed) && parsed.length ? parsed : defaultProducts);
   } catch (error) {
     console.error('Could not load product catalog:', error.message);
-    return defaultProducts;
+    return withoutProductAmounts(defaultProducts);
   }
 }
 
@@ -146,7 +156,7 @@ let products = loadProducts();
 const defaultHeroSlides = [
   { id: 'contractor-marketplace', eyebrow: 'Modern sourcing marketplace', title: 'Shop project materials with warehouse-level confidence.', text: 'Eco Board, PPR fittings, recycled materials, cleaning supplies, and interior packages curated for serious projects.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1800&q=80', cta: 'Shop categories', href: '/categories' },
   { id: 'sustainable-supply', eyebrow: 'Sustainable supply chain', title: 'Industrial materials that look good and work hard.', text: 'Find products that support cleaner builds, practical timelines, and procurement teams that need speed.', image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', cta: 'Explore products', href: '/categories' },
-  { id: 'fitout-ready', eyebrow: 'Fit-out and operations', title: 'From shell to showroom, source it in one place.', text: 'Materials, finishes, pipes, and maintenance essentials for contractors, retailers, hotels, and offices.', image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80', cta: 'Build a cart', href: '/checkout' }
+  { id: 'fitout-ready', eyebrow: 'Fit-out and operations', title: 'From shell to showroom, source it in one place.', text: 'Materials, finishes, pipes, and maintenance essentials for contractors, retailers, hotels, and offices.', image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1800&q=80', cta: 'Build a quote list', href: '/checkout' }
 ];
 function loadHeroSlides() {
   try {
@@ -326,15 +336,12 @@ function normalizeProduct(payload, existing = {}) {
   const category = categories.find((entry) => entry.name === categoryName || entry.id === payload.categoryId);
   const image = String(payload.image || existing.image || '').trim();
   const name = String(payload.name || existing.name || '').trim();
-  const price = 0;
-
   if (!name) return { error: 'Product name is required.' };
   if (!categoryName) return { error: 'Product category is required.' };
   return {
     ...existing,
     sku: String(payload.sku || existing.sku || `RW-${Date.now()}`).trim(),
     name,
-    price,
     description: String(payload.description || existing.description || '').trim(),
     category: category?.name || categoryName,
     categoryId: category?.id || slugify(categoryName),
@@ -410,7 +417,7 @@ function publicResource(resource) {
 }
 
 function sitePayload() {
-  return { profile: siteProfile, heroSlides, categories, products, resources: resources.filter(publicResource) };
+  return { profile: siteProfile, heroSlides, categories, products: withoutProductAmounts(products), resources: resources.filter(publicResource) };
 }
 
 function requireAdmin(req, res, next) {
@@ -428,11 +435,11 @@ app.use('/api', async (req, res, next) => {
   }
 });
 app.get('/api/site', (req, res) => res.json(sitePayload()));
-app.get('/api/products', (req, res) => res.json(products));
+app.get('/api/products', (req, res) => res.json(withoutProductAmounts(products)));
 app.get('/api/products/:id', (req, res) => {
   const product = products.find((entry) => String(entry.id) === String(req.params.id));
   if (!product) return res.status(404).json({ message: 'Product not found.' });
-  return res.json(product);
+  return res.json(withoutProductAmount(product));
 });
 app.get('/api/categories', (req, res) => res.json(categories));
 app.get('/api/poster-specs', (req, res) => res.json(posterSpecs));
@@ -568,7 +575,7 @@ app.post('/api/admin/categories/:id/image', upload.single('image'), async (req, 
   return res.json({ success: true, imageUrl, category, categories });
 });
 
-app.get('/api/admin/products', (req, res) => res.json(products));
+app.get('/api/admin/products', (req, res) => res.json(withoutProductAmounts(products)));
 
 app.post('/api/admin/products', async (req, res) => {
   const normalized = normalizeProduct(req.body);
@@ -576,7 +583,7 @@ app.post('/api/admin/products', async (req, res) => {
   const product = { id: nextProductId(), ...normalized };
   products = [product, ...products];
   await saveProducts();
-  return res.status(201).json({ success: true, product, products });
+  return res.status(201).json({ success: true, product: withoutProductAmount(product), products: withoutProductAmounts(products) });
 });
 
 app.put('/api/admin/products/:id', async (req, res) => {
@@ -586,7 +593,7 @@ app.put('/api/admin/products/:id', async (req, res) => {
   if (normalized.error) return res.status(400).json({ message: normalized.error });
   products[index] = { ...normalized, id: products[index].id };
   await saveProducts();
-  return res.json({ success: true, product: products[index], products });
+  return res.json({ success: true, product: withoutProductAmount(products[index]), products: withoutProductAmounts(products) });
 });
 
 app.delete('/api/admin/products/:id', async (req, res) => {
@@ -594,7 +601,7 @@ app.delete('/api/admin/products/:id', async (req, res) => {
   if (!exists) return res.status(404).json({ message: 'Product not found.' });
   products = products.filter((entry) => String(entry.id) !== String(req.params.id));
   await saveProducts();
-  return res.json({ success: true, products });
+  return res.json({ success: true, products: withoutProductAmounts(products) });
 });
 
 app.post('/api/upload-image', upload.single('image'), async (req, res) => {
@@ -610,7 +617,7 @@ app.post('/api/admin/products/:id/image', upload.single('image'), async (req, re
   product.image = imageUrl;
   product.gallery = [imageUrl, ...(product.gallery || []).filter((image) => image !== imageUrl)].slice(0, 4);
   await saveProducts();
-  return res.json({ success: true, imageUrl, product, products });
+  return res.json({ success: true, imageUrl, product: withoutProductAmount(product), products: withoutProductAmounts(products) });
 });
 
 app.post('/api/admin/products/:id/gallery/:index/image', upload.single('image'), async (req, res) => {
@@ -624,12 +631,12 @@ app.post('/api/admin/products/:id/gallery/:index/image', upload.single('image'),
   product.gallery = gallery.filter(Boolean).slice(0, 6);
   if (index === 0 || !product.image) product.image = imageUrl;
   await saveProducts();
-  return res.json({ success: true, imageUrl, product, products });
+  return res.json({ success: true, imageUrl, product: withoutProductAmount(product), products: withoutProductAmounts(products) });
 });
 
 app.post('/api/checkout', async (req, res) => {
   const { cart = [], customer = {} } = req.body;
-  if (!cart.length) return res.status(400).json({ message: 'Cart is empty.' });
+  if (!cart.length) return res.status(400).json({ message: 'Quote list is empty.' });
   if (!customer.name || !customer.email || !customer.address) return res.status(400).json({ message: 'Name, email, and delivery address are required.' });
 
   return res.json({

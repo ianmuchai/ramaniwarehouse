@@ -77,7 +77,7 @@ export default function Admin() {
   const heroSpec = posterSpecs.find((spec) => spec.name === 'Homepage hero carousel') || posterSpecs[0];
   const categorySpec = posterSpecs.find((spec) => spec.name === 'Category carousel poster');
   const productSpec = posterSpecs.find((spec) => spec.name === 'Product card image');
-  const previewProduct = selectedProduct ? { ...selectedProduct, ...form, price: 0, specs: specsFromText(form.specs) } : { ...form, price: 0, specs: specsFromText(form.specs) };
+  const previewProduct = selectedProduct ? { ...selectedProduct, ...form, specs: specsFromText(form.specs) } : { ...form, specs: specsFromText(form.specs) };
   const previewImages = imageListFromProduct(previewProduct);
 
   async function loadAdmin() {
@@ -251,7 +251,7 @@ export default function Admin() {
     try {
       const endpoint = selectedId === 'new' ? '/api/admin/products' : `/api/admin/products/${selectedId}`;
       const method = selectedId === 'new' ? 'POST' : 'PUT';
-      const response = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ ...form, price: 0 }) });
+      const response = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify(form) });
       const data = await parseAdminResponse(response, 'Save failed.');
       setProducts(data.products || []); setSelectedId(String(data.product.id)); setForm(formFromProduct(data.product)); setMessage(selectedId === 'new' ? 'Product added.' : 'Product updated.');
     } catch (error) { setMessage(error.message || 'Could not save product.'); } finally { setSaving(false); }

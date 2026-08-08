@@ -89,8 +89,8 @@ export default function Header() {
                 <path d="M8.55 16.15c.68-1.34 1.86-2.05 3.45-2.05s2.77.71 3.45 2.05" />
               </svg>
             </button>
-            <Link to="/checkout" className="cart-button" aria-label={`Cart with ${itemsCount} items`}>
-              <span>Cart</span>
+            <Link to="/checkout" className="cart-button" aria-label={`Quote list with ${itemsCount} items`}>
+              <span>Quote list</span>
               <strong>{itemsCount}</strong>
             </Link>
           </div>

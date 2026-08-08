@@ -31,7 +31,7 @@ const checks = [
   },
   {
     file: 'src/components/MobileActionBar.jsx',
-    patterns: ['mobile-action-bar', 'Shop', 'Estimate', 'WhatsApp', 'Cart']
+    patterns: ['mobile-action-bar', 'Shop', 'Estimate', 'WhatsApp', 'Quote']
   },
   {
     file: 'src/App.jsx',

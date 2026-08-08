@@ -11,6 +11,9 @@ const files = [
   'src/pages/Home.jsx',
   'src/components/CompareTray.jsx',
   'src/pages/Admin.jsx',
+  'server/data/products.json',
+  'server/index.js',
+  'public/offline.html',
 ];
 
 const forbidden = [
@@ -30,6 +33,12 @@ const forbidden = [
   /Shipping estimate/i,
   /Total/,
   /payment path/i,
+  /\bpricing\b/i,
+  /\bcheckout-ready\b/i,
+  /\bStripe\b/i,
+  /\bstripe\b/i,
+  /\bprice\s*:/i,
+  /\"price\"\s*:/i,
 ];
 
 for (const file of files) {

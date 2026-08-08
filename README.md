@@ -54,13 +54,7 @@ ADMIN_KEY=choose-a-private-admin-password
 CLIENT_URL=https://your-vercel-domain.vercel.app
 ```
 
-Optional Stripe checkout:
-
-```env
-STRIPE_SECRET_KEY=your_stripe_secret_key
-```
-
-Without Stripe, checkout returns a demo order response.
+Quote requests are handled by the Ramani backend; prices and payment checkout are intentionally disabled.
 
 ## Image Uploads and Vercel
 

@@ -24,7 +24,7 @@ function Icon({ type }) {
     );
   }
 
-  if (type === 'cart') {
+  if (type === 'quote-list') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6.7 17.2a2 2 0 1 1-.02 4.02 2 2 0 0 1 .02-4.02Zm9.8 0a2 2 0 1 1 0 4.02 2 2 0 0 1 0-4.02ZM4.1 3l.62 2.7H21l-2.1 8.1a2.3 2.3 0 0 1-2.22 1.72H7.7a2.3 2.3 0 0 1-2.24-1.78L3.1 4.9H1V3h3.1Zm1.06 4.6 1.96 5.67c.07.22.28.36.52.36h9.04c.24 0 .45-.16.52-.39l1.45-5.64H5.16Z" />
@@ -41,7 +41,7 @@ function Icon({ type }) {
 
 export default function MobileActionBar() {
   const { itemsCount } = useCart();
-  const cartCount = itemsCount > 99 ? '99+' : String(itemsCount);
+  const quoteCount = itemsCount > 99 ? '99+' : String(itemsCount);
 
   return (
     <nav className="mobile-action-bar" aria-label="Mobile quick actions">
@@ -57,12 +57,12 @@ export default function MobileActionBar() {
         <span className="mobile-action-icon whatsapp-mark" aria-hidden="true"><Icon type="whatsapp" /></span>
         <span className="mobile-action-text visually-hidden">WhatsApp</span>
       </a>
-      <NavLink to="/checkout" className={actionClass} aria-label={`Cart with ${itemsCount} items`}>
+      <NavLink to="/checkout" className={actionClass} aria-label={`Quote list with ${itemsCount} items`}>
         <span className="mobile-action-icon mobile-cart-icon" aria-hidden="true">
-          <Icon type="cart" />
-          <span className="mobile-cart-count">{cartCount}</span>
+          <Icon type="quote-list" />
+          <span className="mobile-cart-count">{quoteCount}</span>
         </span>
-        <span className="mobile-action-text">Cart</span>
+        <span className="mobile-action-text">Quote</span>
       </NavLink>
     </nav>
   );
