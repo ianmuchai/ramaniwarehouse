@@ -5,14 +5,10 @@ import { assetUrl } from '../utils/assets';
 import { useCart } from '../context/CartContext';
 import { useCompare } from '../context/CompareContext';
 
-function formatKes(value) {
-  return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
 function modeLabel(mode) {
   if (mode === 'consult') return 'Consult first';
   if (mode === 'quote') return 'Quote-led';
-  return 'Checkout-ready';
+  return 'Quote-led';
 }
 
 export default function ProductList({ category, limit, products: providedProducts }) {
@@ -43,7 +39,6 @@ export default function ProductList({ category, limit, products: providedProduct
   }, [category, limit, providedProducts, remoteProducts]);
 
   function addProduct(product) {
-    if (product.buyingMode === 'consult') return;
     add(product, 1);
     setAddedId(product.id);
     window.setTimeout(() => setAddedId(null), 1400);
@@ -77,16 +72,12 @@ export default function ProductList({ category, limit, products: providedProduct
             </div>
             <div className="product-footer">
               <div>
-                <strong>{formatKes(product.price)}</strong>
-                <small>{product.buyingMode === 'consult' ? 'Consult-backed pricing' : 'Project-ready pricing'}</small>
+                <strong>Quote on request</strong>
+                <small>Ramani confirms availability, quantity, and delivery details.</small>
               </div>
             </div>
             <div className="product-card-actions mobile-product-actions">
-              {product.buyingMode === 'consult' ? (
-                <Link className="button primary compact" to={`/product/${product.id}#product-quote`}>Request consult</Link>
-              ) : (
-                <button className="button primary compact" type="button" onClick={() => addProduct(product)}>{addedId === product.id ? 'Added' : product.buyingMode === 'quote' ? 'Add for quote' : 'Add to cart'}</button>
-              )}
+              <button className="button primary compact" type="button" onClick={() => addProduct(product)}>{addedId === product.id ? 'Added to quote' : 'Add for quote'}</button>
               <button className="button secondary compact" type="button" onClick={() => addCompare(product)}>{isCompared(product.id) ? 'Comparing' : 'Compare'}</button>
               <Link className="button secondary compact" to={`/product/${product.id}`}>View details</Link>
             </div>

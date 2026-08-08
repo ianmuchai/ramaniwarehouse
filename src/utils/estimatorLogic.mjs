@@ -123,7 +123,7 @@ export const solutionTracks = [
     estimatorType: 'repeat-supply',
     projectType: 'cleaning operations',
     measurementLabel: 'Pack and repeat-supply planning',
-    buyingPath: 'Checkout-ready',
+    buyingPath: 'Quote-led',
     decisionCue: 'Facility type, cleaning zones, frequency',
     prompt: 'Best for workshops, warehouses, hospitality backrooms, and repeat operations supply.',
     productCategoryIds: ['cleaning-solutions'],
@@ -145,7 +145,7 @@ export const solutionTracks = [
     estimatorType: 'pieces',
     projectType: 'furniture sourcing',
     measurementLabel: 'Sets, seats and finish planning',
-    buyingPath: 'Checkout-ready',
+    buyingPath: 'Quote-led',
     decisionCue: 'Room type, number of sets, finish preference',
     prompt: 'Best for dining, hospitality, furnished suites, and custom furniture requests.',
     productCategoryIds: ['furniture'],
@@ -334,7 +334,6 @@ export function buildEstimatorPayload(input, customer, preferredContact, recomme
     preferredContact,
     recommendation: {
       products: recommendation.map((product) => ({ id: product.id, name: product.name, sku: product.sku, buyingMode: product.buyingMode })),
-      estimatedSubtotal: recommendation.reduce((sum, product) => sum + Number(product.price || 0), 0),
       summary
     }
   };

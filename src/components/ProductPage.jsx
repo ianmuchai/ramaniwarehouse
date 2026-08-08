@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { assetUrl } from '../utils/assets';
 import { useCart } from '../context/CartContext';
@@ -7,19 +7,14 @@ import { useCompare } from '../context/CompareContext';
 import QuoteForm from './QuoteForm';
 import { whatsappUrl } from '../utils/whatsapp';
 
-function formatKes(value) {
-  return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
 function buyingModeLabel(mode) {
   if (mode === 'consult') return 'Consult first';
   if (mode === 'quote') return 'Quote-led';
-  return 'Checkout-ready';
+  return 'Quote-led';
 }
 
 export default function ProductPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
@@ -39,29 +34,13 @@ export default function ProductPage() {
   const product = useMemo(() => products.find((entry) => String(entry.id) === String(id)), [products, id]);
   const related = useMemo(() => products.filter((entry) => entry.category === product?.category && entry.id !== product?.id).slice(0, 3), [products, product]);
 
-  function addToCart() {
-    if (product?.buyingMode === 'consult') {
-      setMessage('This item needs a consult before cart checkout. Send a project brief below.');
-      return;
-    }
+  function addToQuoteList() {
     add(product, qty);
-    setMessage(`${qty} item${qty > 1 ? 's' : ''} added to cart.`);
-  }
-
-  function buyNow() {
-    if (product?.buyingMode === 'consult') {
-      setMessage('This item needs a consult before checkout. Send a project brief below.');
-      return;
-    }
-    add(product, qty);
-    navigate('/checkout');
+    setMessage(`${qty} item${qty > 1 ? 's' : ''} added to your quote list.`);
   }
 
   if (loading) return <main className="container"><div className="loading-card">Loading product...</div></main>;
   if (!product) return <main className="container"><div className="loading-card">Product not found.</div></main>;
-
-  const isConsultFirst = product.buyingMode === 'consult';
-  const isQuoteLed = product.buyingMode === 'quote' || product.quoteOnly;
 
   return (
     <main className="product-detail-page">
@@ -92,8 +71,8 @@ export default function ProductPage() {
           {product.supportNotes ? <p className="support-note">{product.supportNotes}</p> : null}
           <div className="purchase-box">
             <div>
-              <small>{isConsultFirst ? 'Indicative price' : 'Price'}</small>
-              <strong>{formatKes(product.price)}</strong>
+              <small>Quote path</small>
+              <strong>Quote on request</strong>
             </div>
             <div className="qty-stepper" aria-label="Quantity selector">
               <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Decrease quantity">-</button>
@@ -101,15 +80,8 @@ export default function ProductPage() {
               <button type="button" onClick={() => setQty(qty + 1)} aria-label="Increase quantity">+</button>
             </div>
             <div className="purchase-actions">
-              {isConsultFirst ? (
-                <a className="button primary" href="#product-quote">Request consult</a>
-              ) : (
-                <>
-                  <button className="button primary" type="button" onClick={buyNow}>{isQuoteLed ? 'Start quote cart' : 'Buy now'}</button>
-                  <button className="button secondary" type="button" onClick={addToCart}>{isQuoteLed ? 'Add for quote' : 'Add to cart'}</button>
-                </>
-              )}
-              <a className="button secondary" href="#product-quote">{isConsultFirst ? 'Project brief' : 'Request quote'}</a>
+              <button className="button primary" type="button" onClick={addToQuoteList}>Add for quote</button>
+              <a className="button secondary" href="#product-quote">Request quote</a>
               <button className="button secondary" type="button" onClick={() => addCompare(product)}>Compare</button>
               <a className="button glass" href={whatsappUrl({ text: `Hello Ramani Warehouse, I am interested in ${product.name} (${product.sku}).` })} target="_blank" rel="noreferrer">WhatsApp</a>
             </div>
@@ -143,7 +115,7 @@ export default function ProductPage() {
               <Link key={entry.id} to={`/product/${entry.id}`} className="related-card">
                 <img src={assetUrl(entry.image)} alt={entry.name} loading="lazy" decoding="async" />
                 <strong>{entry.name}</strong>
-                <span>{formatKes(entry.price)}</span>
+                <span>Quote on request</span>
               </Link>
             ))}
           </div>

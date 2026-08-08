@@ -35,8 +35,6 @@ export default function CategoryPage() {
       const modeMatch = filters.buyingMode === 'all' || product.buyingMode === filters.buyingMode;
       return queryMatch && modeMatch;
     }).sort((a, b) => {
-      if (filters.sort === 'price-low') return Number(a.price || 0) - Number(b.price || 0);
-      if (filters.sort === 'price-high') return Number(b.price || 0) - Number(a.price || 0);
       if (filters.sort === 'name') return String(a.name).localeCompare(String(b.name));
       return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
     });
@@ -64,8 +62,8 @@ export default function CategoryPage() {
       <section className="section products-section category-products-only">
         <div className="catalog-controls slim mobile-filter-scroll" aria-label="Category product filters">
           <label><span className="visually-hidden">Search category products</span><input type="search" autoComplete="off" value={filters.query} onChange={(event) => setFilters({ ...filters, query: event.target.value })} placeholder={`Search ${category?.name || 'category'} products`} /></label>
-          <label><span className="visually-hidden">Filter by buying mode</span><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="checkout">Checkout-ready</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select></label>
-          <label><span className="visually-hidden">Sort products</span><select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="price-low">Price low to high</option><option value="price-high">Price high to low</option><option value="name">Name</option></select></label>
+          <label><span className="visually-hidden">Filter by buying mode</span><select value={filters.buyingMode} onChange={(event) => setFilters({ ...filters, buyingMode: event.target.value })}><option value="all">All buying modes</option><option value="quote">Quote-led</option><option value="consult">Consult first</option></select></label>
+          <label><span className="visually-hidden">Sort products</span><select value={filters.sort} onChange={(event) => setFilters({ ...filters, sort: event.target.value })}><option value="featured">Featured</option><option value="name">Name</option></select></label>
         </div>
         <div className="catalog-result-bar">
           <p role="status" aria-live="polite">Showing {filteredProducts.length} of {products.length} {category?.name || 'category'} products</p>

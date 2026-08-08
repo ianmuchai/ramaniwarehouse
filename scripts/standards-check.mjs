@@ -59,15 +59,15 @@ const checks = [
   },
   {
     file: 'src/pages/Checkout.jsx',
-    patterns: ['Guest checkout', 'autoComplete="name"', 'autoComplete="email"', 'type="tel"', 'autoComplete="tel"', 'checkout-assurance', 'role="status"']
+    patterns: ['Guest quote request', 'autoComplete="name"', 'autoComplete="email"', 'type="tel"', 'autoComplete="tel"', 'checkout-assurance', 'role="status"']
   },
   {
     file: 'src/components/ProductPage.jsx',
-    patterns: ['buyingModeLabel', 'buying-mode-pill', 'id="product-quote"', 'Request consult']
+    patterns: ['buyingModeLabel', 'buying-mode-pill', 'id="product-quote"', 'Request quote']
   },
   {
     file: 'src/components/ProductList.jsx',
-    patterns: ['buying-mode-chip', 'Request consult', 'decoding="async"']
+    patterns: ['buying-mode-chip', 'Add for quote', 'decoding="async"']
   },
   {
     file: 'src/pages/Categories.jsx',

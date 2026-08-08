@@ -4,10 +4,6 @@ import { useCart } from '../context/CartContext';
 import { useCompare } from '../context/CompareContext';
 import { assetUrl } from '../utils/assets';
 
-function formatKes(value) {
-  return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
 export default function CompareTray() {
   const { items, removeCompare, clearCompare } = useCompare();
   const { add } = useCart();
@@ -26,9 +22,9 @@ export default function CompareTray() {
             <strong>{item.name}</strong>
             <span>{item.category}</span>
             <small>{item.stock} | {item.leadTime}</small>
-            <small>{formatKes(item.price)}</small>
+            <small>Quote on request</small>
             <div>
-              <button type="button" onClick={() => add(item, 1)}>Cart</button>
+              <button type="button" onClick={() => add(item, 1)}>Quote list</button>
               <button type="button" onClick={() => removeCompare(item.id)}>Remove</button>
             </div>
           </article>

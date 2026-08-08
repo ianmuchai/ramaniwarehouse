@@ -5,13 +5,13 @@ import { parseAdminResponse } from '../utils/adminApi.mjs';
 const PHOTO_ACCEPT = 'image/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.svg,.bmp,.tif,.tiff,.heic,.heif,.jfif,.pjpeg,.pjp';
 
 const emptyForm = {
-  sku: '', name: '', price: '', category: 'Eco Board', badge: 'New', stock: 'In stock', leadTime: '2-4 days', rating: '4.6', image: '', description: '', specs: '', gallery: ''
+  sku: '', name: '', category: 'Eco Board', badge: 'New', stock: 'In stock', leadTime: '2-4 days', rating: '4.6', image: '', description: '', specs: '', gallery: ''
 };
 
 function formFromProduct(product) {
   if (!product) return emptyForm;
   return {
-    sku: product.sku || '', name: product.name || '', price: product.price || '', category: product.category || 'Eco Board', badge: product.badge || '', stock: product.stock || '', leadTime: product.leadTime || '', rating: product.rating || '4.6', image: product.image || '', description: product.description || '', specs: (product.specs || []).join(', '), gallery: (product.gallery || []).join(', ')
+    sku: product.sku || '', name: product.name || '', category: product.category || 'Eco Board', badge: product.badge || '', stock: product.stock || '', leadTime: product.leadTime || '', rating: product.rating || '4.6', image: product.image || '', description: product.description || '', specs: (product.specs || []).join(', '), gallery: (product.gallery || []).join(', ')
   };
 }
 
@@ -77,7 +77,7 @@ export default function Admin() {
   const heroSpec = posterSpecs.find((spec) => spec.name === 'Homepage hero carousel') || posterSpecs[0];
   const categorySpec = posterSpecs.find((spec) => spec.name === 'Category carousel poster');
   const productSpec = posterSpecs.find((spec) => spec.name === 'Product card image');
-  const previewProduct = selectedProduct ? { ...selectedProduct, ...form, price: Number(form.price || 0), specs: specsFromText(form.specs) } : { ...form, price: Number(form.price || 0), specs: specsFromText(form.specs) };
+  const previewProduct = selectedProduct ? { ...selectedProduct, ...form, price: 0, specs: specsFromText(form.specs) } : { ...form, price: 0, specs: specsFromText(form.specs) };
   const previewImages = imageListFromProduct(previewProduct);
 
   async function loadAdmin() {
@@ -251,7 +251,7 @@ export default function Admin() {
     try {
       const endpoint = selectedId === 'new' ? '/api/admin/products' : `/api/admin/products/${selectedId}`;
       const method = selectedId === 'new' ? 'POST' : 'PUT';
-      const response = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify(form) });
+      const response = await fetch(endpoint, { method, headers: { 'Content-Type': 'application/json', ...adminHeaders }, body: JSON.stringify({ ...form, price: 0 }) });
       const data = await parseAdminResponse(response, 'Save failed.');
       setProducts(data.products || []); setSelectedId(String(data.product.id)); setForm(formFromProduct(data.product)); setMessage(selectedId === 'new' ? 'Product added.' : 'Product updated.');
     } catch (error) { setMessage(error.message || 'Could not save product.'); } finally { setSaving(false); }
@@ -349,7 +349,7 @@ export default function Admin() {
   return (
     <main>
       <section className="page-hero compact admin-hero"><div className="container">
-        <span className="eyebrow">Private Admin</span><h1>Manage storefront content.</h1><p>Edit the homepage carousel, product pictures, product details, prices, categories, and checkout catalog.</p>
+        <span className="eyebrow">Private Admin</span><h1>Manage storefront content.</h1><p>Edit the homepage carousel, product pictures, product details, categories, and quote-led catalog.</p>
         <button className="button glass compact" type="button" onClick={lockAdmin}>Lock admin</button>
       </div></section>
 
@@ -449,9 +449,9 @@ export default function Admin() {
       <section className="container admin-section-block">
         <div className="admin-section-heading"><div><span className="eyebrow">Product Catalog</span><h2>Edit products and product pictures.</h2><p>Product card images should be {productSpec?.pixels || '900 x 720 px'}. Category carousel posters should be {categorySpec?.pixels || '1200 x 720 px'}.</p></div></div>
         <div className="admin-dashboard">
-          <aside className="admin-sidebar card-panel"><div className="admin-sidebar-head"><div><span className="eyebrow">Catalog</span><h2>{products.length} products</h2></div><button className="button secondary compact" type="button" onClick={() => chooseProduct('new')}>New</button></div><div className="admin-product-list">{products.map((product) => <button key={product.id} className={String(product.id) === String(selectedId) ? 'admin-product-row active' : 'admin-product-row'} type="button" onClick={() => chooseProduct(String(product.id))}><img src={assetUrl(product.image)} alt="" /><span><strong>{product.name}</strong><small>{product.category} - KES {Number(product.price).toLocaleString()}</small></span></button>)}</div></aside>
+          <aside className="admin-sidebar card-panel"><div className="admin-sidebar-head"><div><span className="eyebrow">Catalog</span><h2>{products.length} products</h2></div><button className="button secondary compact" type="button" onClick={() => chooseProduct('new')}>New</button></div><div className="admin-product-list">{products.map((product) => <button key={product.id} className={String(product.id) === String(selectedId) ? 'admin-product-row active' : 'admin-product-row'} type="button" onClick={() => chooseProduct(String(product.id))}><img src={assetUrl(product.image)} alt="" /><span><strong>{product.name}</strong><small>{product.category} - Quote-led</small></span></button>)}</div></aside>
 
-          <form className="admin-editor card-panel" onSubmit={saveProduct}><div className="admin-editor-head"><div><span className="eyebrow">{selectedId === 'new' ? 'Create' : 'Edit'}</span><h2>{selectedId === 'new' ? 'Add a new product' : 'Edit product details'}</h2></div>{selectedId !== 'new' ? <button className="button danger compact" type="button" onClick={deleteProduct} disabled={saving}>Delete</button> : null}</div><div className="admin-form-grid"><label>Product name<input required value={form.name} onChange={(event) => updateField('name', event.target.value)} /></label><label>SKU<input value={form.sku} onChange={(event) => updateField('sku', event.target.value)} /></label><label>Price<input required type="number" min="0" value={form.price} onChange={(event) => updateField('price', event.target.value)} /></label><label>Category<select value={form.category} onChange={(event) => updateField('category', event.target.value)}>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label><label>Badge<input value={form.badge} onChange={(event) => updateField('badge', event.target.value)} /></label><label>Stock status<input value={form.stock} onChange={(event) => updateField('stock', event.target.value)} /></label><label>Lead time<input value={form.leadTime} onChange={(event) => updateField('leadTime', event.target.value)} /></label><label>Rating<input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={(event) => updateField('rating', event.target.value)} /></label></div><label>Image URL<input value={form.image} onChange={(event) => updateField('image', event.target.value)} placeholder="https://..." /></label><label>Description<textarea required rows="4" value={form.description} onChange={(event) => updateField('description', event.target.value)} /></label><label>Specs comma separated<input value={form.specs} onChange={(event) => updateField('specs', event.target.value)} /></label><label>Gallery URLs comma separated<input value={form.gallery} onChange={(event) => updateField('gallery', event.target.value)} /></label><div className="admin-actions"><button className="button primary" type="submit" disabled={saving}>{saving ? 'Saving...' : selectedId === 'new' ? 'Add product' : 'Save changes'}</button><button className="button secondary" type="button" onClick={() => chooseProduct(selectedId)}>Reset form</button></div>{message ? <p className="status-text">{message}</p> : null}</form>
+          <form className="admin-editor card-panel" onSubmit={saveProduct}><div className="admin-editor-head"><div><span className="eyebrow">{selectedId === 'new' ? 'Create' : 'Edit'}</span><h2>{selectedId === 'new' ? 'Add a new product' : 'Edit product details'}</h2></div>{selectedId !== 'new' ? <button className="button danger compact" type="button" onClick={deleteProduct} disabled={saving}>Delete</button> : null}</div><div className="admin-form-grid"><label>Product name<input required value={form.name} onChange={(event) => updateField('name', event.target.value)} /></label><label>SKU<input value={form.sku} onChange={(event) => updateField('sku', event.target.value)} /></label><label>Category<select value={form.category} onChange={(event) => updateField('category', event.target.value)}>{categories.map((category) => <option key={category.id} value={category.name}>{category.name}</option>)}</select></label><label>Badge<input value={form.badge} onChange={(event) => updateField('badge', event.target.value)} /></label><label>Stock status<input value={form.stock} onChange={(event) => updateField('stock', event.target.value)} /></label><label>Lead time<input value={form.leadTime} onChange={(event) => updateField('leadTime', event.target.value)} /></label><label>Rating<input type="number" step="0.1" min="0" max="5" value={form.rating} onChange={(event) => updateField('rating', event.target.value)} /></label></div><label>Image URL<input value={form.image} onChange={(event) => updateField('image', event.target.value)} placeholder="https://..." /></label><label>Description<textarea required rows="4" value={form.description} onChange={(event) => updateField('description', event.target.value)} /></label><label>Specs comma separated<input value={form.specs} onChange={(event) => updateField('specs', event.target.value)} /></label><label>Gallery URLs comma separated<input value={form.gallery} onChange={(event) => updateField('gallery', event.target.value)} /></label><div className="admin-actions"><button className="button primary" type="submit" disabled={saving}>{saving ? 'Saving...' : selectedId === 'new' ? 'Add product' : 'Save changes'}</button><button className="button secondary" type="button" onClick={() => chooseProduct(selectedId)}>Reset form</button></div>{message ? <p className="status-text">{message}</p> : null}</form>
 
           <aside className="admin-preview card-panel">
             <span className="eyebrow">Current product photos</span>
@@ -462,7 +462,7 @@ export default function Admin() {
               <small>{imageName(previewProduct.image)}</small>
             </div>
             <h2>{previewProduct.name || 'New product'}</h2>
-            <p>{previewProduct.category || 'Category'} - KES {Number(previewProduct.price || 0).toLocaleString()}</p>
+            <p>{previewProduct.category || 'Category'} - Quote-led</p>
             <div className="spec-row detail">{(previewProduct.specs || []).slice(0, 4).map((spec) => <span key={spec}>{spec}</span>)}</div>
             <form className="image-upload-form" onSubmit={uploadImage}>
               <label>Replace main catalog photo<input type="file" name="image" accept={PHOTO_ACCEPT} /></label>

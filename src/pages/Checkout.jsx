@@ -3,18 +3,11 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { assetUrl } from '../utils/assets';
 
-function formatKes(value) {
-  return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
 export default function Checkout() {
-  const { cart, subtotal, update, clear } = useCart();
+  const { cart, update, clear } = useCart();
   const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '' });
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-  const shipping = subtotal > 0 ? 1500 : 0;
-  const total = subtotal + shipping;
 
   async function submit(event) {
     event.preventDefault();
@@ -24,7 +17,7 @@ export default function Checkout() {
     }
 
     setSubmitting(true);
-    setMessage('Preparing your order request...');
+    setMessage('Preparing your quote request...');
 
     try {
       const res = await fetch('/api/checkout', {
@@ -33,7 +26,7 @@ export default function Checkout() {
         body: JSON.stringify({ cart, customer })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Checkout failed.');
+      if (!res.ok) throw new Error(data.message || 'Quote request failed.');
       if (data.url) {
         window.location.href = data.url;
       } else {
@@ -41,7 +34,7 @@ export default function Checkout() {
         clear();
       }
     } catch (error) {
-      setMessage(error.message || 'Checkout could not be completed.');
+      setMessage(error.message || 'Quote request could not be completed.');
     } finally {
       setSubmitting(false);
     }
@@ -51,15 +44,15 @@ export default function Checkout() {
     <main>
       <section className="page-hero compact">
         <div className="container">
-          <span className="eyebrow">Checkout</span>
-          <h1>Confirm your project cart.</h1>
-          <p>Review quantities, delivery details, and payment path before sending the order.</p>
+          <span className="eyebrow">Quote list</span>
+          <h1>Confirm your quote request.</h1>
+          <p>Review quantities and delivery details before sending the quote request.</p>
         </div>
       </section>
 
       <section className="container checkout-grid">
         <form className="checkout-form card-panel" onSubmit={submit} aria-busy={submitting}>
-          <h2>Guest checkout</h2>
+          <h2>Guest quote request</h2>
           <p className="form-helper">No account required. Ramani uses these details to confirm delivery, availability, and fulfillment.</p>
           <label>Full name<input required autoComplete="name" value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} /></label>
           <label>Email<input type="email" required autoComplete="email" value={customer.email} onChange={(event) => setCustomer({ ...customer, email: event.target.value })} /></label>
@@ -77,7 +70,7 @@ export default function Checkout() {
         <aside className="order-summary card-panel">
           <h2>Order summary</h2>
           {cart.length === 0 ? (
-            <div className="empty-cart"><p>No items in cart.</p><Link className="button secondary" to="/categories">Start shopping</Link></div>
+            <div className="empty-cart"><p>No items in cart.</p><Link className="button secondary" to="/categories">Browse products</Link></div>
           ) : (
             <>
               <div className="cart-lines">
@@ -86,7 +79,7 @@ export default function Checkout() {
                     <img src={assetUrl(item.image)} alt="" loading="lazy" decoding="async" />
                     <div>
                       <strong>{item.name}</strong>
-                      <span>{formatKes(item.price)} x {item.quantity}</span>
+                      <span>Quantity: {item.quantity}</span>
                     </div>
                     <div className="qty-controls" aria-label={`Quantity controls for ${item.name}`}>
                       <button type="button" onClick={() => update(item.id, item.quantity - 1)} aria-label={`Decrease ${item.name} quantity`}>-</button>
@@ -97,9 +90,7 @@ export default function Checkout() {
                 ))}
               </div>
               <div className="summary-box">
-                <div><span>Subtotal</span><strong>{formatKes(subtotal)}</strong></div>
-                <div><span>Shipping estimate</span><strong>{formatKes(shipping)}</strong></div>
-                <div className="total"><span>Total</span><strong>{formatKes(total)}</strong></div>
+                <div><span>Commercial details</span><strong>Confirmed by Ramani</strong></div>
               </div>
             </>
           )}

@@ -8,7 +8,7 @@
     "scripts": {
         "dev": "concurrently \"vite\" \"npm run start --prefix server\"",
         "build": "vite build",
-        "test": "node scripts/standards-check.mjs && node scripts/estimator-logic-check.mjs && node scripts/admin-api-response-check.mjs && node scripts/upload-error-json-check.mjs",
+        "test": "node scripts/quote-led-check.mjs && node scripts/standards-check.mjs && node scripts/estimator-logic-check.mjs && node scripts/admin-api-response-check.mjs && node scripts/upload-error-json-check.mjs",
         "preview": "vite preview",
         "start": "npm run start --prefix server"
     },
@@ -23,8 +23,7 @@
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.14.1",
-        "sharp": "^0.35.3",
-        "stripe": "^17.1.0"
+        "sharp": "^0.35.3"
     },
     "devDependencies": {
         "@vitejs/plugin-react": "^4.3.1",

@@ -14,14 +14,10 @@ import {
   urgencies
 } from '../utils/estimatorLogic.mjs';
 
-function formatKes(value) {
-  return `KES ${Number(value || 0).toLocaleString()}`;
-}
-
 function modeLabel(mode) {
   if (mode === 'consult') return 'Consult first';
   if (mode === 'quote') return 'Quote-led';
-  return 'Checkout-ready';
+  return 'Quote-led';
 }
 
 function FieldControl({ field, value, onChange }) {
@@ -71,7 +67,6 @@ export default function Estimator() {
   const products = site.products || [];
   const recommendation = useMemo(() => recommendProducts(products, input), [products, input]);
   const estimatorSummary = useMemo(() => buildEstimatorSummary(input, recommendation), [input, recommendation]);
-  const estimatedSubtotal = recommendation.reduce((sum, product) => sum + Number(product.price || 0), 0);
   const heroImage = categoryById.get(selectedTrack.id)?.image || '/images/1784186033855-ChatGPT-Image-Jul-16-2026-10_13_37-AM.png';
 
   function selectTrack(trackId) {
@@ -113,7 +108,7 @@ export default function Estimator() {
 
   function addRecommendedToCart() {
     recommendation.filter((product) => product.buyingMode !== 'consult').forEach((product) => add(product, 1));
-    setMessage('Checkout-ready and quote-led items were added to your cart. Consult-first items remain in your request.');
+    setMessage('Recommended items were added to your quote list. Consult-first items remain in your request.');
   }
 
   const whatsappText = `Hello Ramani Warehouse, I need help with ${selectedTrack.title}. ${estimatorSummary.quantitySignal} Delivery area: ${input.location || customer.location || 'to confirm'}.`;
@@ -242,16 +237,16 @@ export default function Estimator() {
           </div>
           <div className="estimate-metric-grid">
             <span><strong>{recommendation.length}</strong>Relevant items</span>
-            <span><strong>{formatKes(estimatedSubtotal)}</strong>Listed item total</span>
+            <span><strong>Quote-led</strong>Commercial path</span>
           </div>
           <div className="confirmation-list">
             <h3>Ramani will confirm</h3>
             {estimatorSummary.confirmationPoints.map((point) => <span key={point}>{point}</span>)}
           </div>
           <div className="recommendation-list product-aware-recommendations">
-            {recommendation.map((product) => <article key={product.id}><img src={assetUrl(product.image)} alt="" loading="lazy" decoding="async" /><div><strong>{product.name}</strong><span>{modeLabel(product.buyingMode)} | {product.measurementUnit}</span><small>{product.supportNotes}</small></div><b>{formatKes(product.price)}</b></article>)}
+            {recommendation.map((product) => <article key={product.id}><img src={assetUrl(product.image)} alt="" loading="lazy" decoding="async" /><div><strong>{product.name}</strong><span>{modeLabel(product.buyingMode)} | {product.measurementUnit}</span><small>{product.supportNotes}</small></div><b>Quote on request</b></article>)}
           </div>
-          {recommendation.length ? <div className="quote-actions"><button className="button secondary" type="button" onClick={addRecommendedToCart}>Add suitable items to cart</button><a className="button glass" href={whatsappUrl({ text: whatsappText })} target="_blank" rel="noreferrer">Continue on WhatsApp</a></div> : <Link className="button secondary" to="/categories">Browse categories</Link>}
+          {recommendation.length ? <div className="quote-actions"><button className="button secondary" type="button" onClick={addRecommendedToCart}>Add suitable items to quote list</button><a className="button glass" href={whatsappUrl({ text: whatsappText })} target="_blank" rel="noreferrer">Continue on WhatsApp</a></div> : <Link className="button secondary" to="/categories">Browse categories</Link>}
           {submitted ? <p className="status-text" role="status" aria-live="polite">Saved as a Ramani product estimate for follow-up.</p> : null}
         </aside>
       </section>

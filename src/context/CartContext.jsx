@@ -40,12 +40,10 @@ export function CartProvider({ children }) {
     setCart([]);
   }
 
-  const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-
   const itemsCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, add, update, remove, clear, subtotal, itemsCount }}>
+    <CartContext.Provider value={{ cart, add, update, remove, clear, itemsCount }}>
       {children}
     </CartContext.Provider>
   );

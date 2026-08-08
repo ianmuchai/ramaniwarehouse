@@ -14,7 +14,7 @@ const fallbackProfile = {
   metrics: [
     { value: '7+', label: 'Core categories' },
     { value: '24h', label: 'Quote response' },
-    { value: 'KES', label: 'Local checkout' }
+    { value: 'Quote', label: 'Led sourcing' }
   ]
 };
 
@@ -56,7 +56,7 @@ export default function Home() {
             <p>{activeSlide?.text || 'Source materials, supplies, and fit-out essentials for modern commercial projects.'}</p>
             <div className="hero-actions">
               <Link className="button primary" to={activeSlide?.href || '/categories'}>{activeSlide?.cta || 'Shop categories'}</Link>
-              <Link className="button glass" to="/checkout">View cart</Link>
+              <Link className="button glass" to="/checkout">Quote list</Link>
             </div>
             <div className="metric-row">
               {(site.profile?.metrics || fallbackProfile.metrics).map((metric) => (
@@ -84,7 +84,7 @@ export default function Home() {
           <span>Local sourcing support</span>
           <span>Fast quote response</span>
           <span>Editable product catalog</span>
-          <span>Checkout-ready orders</span>
+          <span>Quote-led requests</span>
         </div>
       </section>
 
@@ -155,9 +155,9 @@ export default function Home() {
           <h2>Designed for buyers who need less confusion and more certainty.</h2>
         </div>
         <div className="experience-grid">
-          <article><strong>Shop with confidence</strong><p>See product details, prices, availability, and delivery expectations before you place an order.</p></article>
+          <article><strong>Shop with confidence</strong><p>See product details, availability, and delivery expectations before you request a quote.</p></article>
           <article><strong>Materials for real projects</strong><p>Find practical supplies for construction, interiors, maintenance, retail spaces, workshops, and daily operations.</p></article>
-          <article><strong>Easy ordering</strong><p>Add what you need to cart, confirm your details, and let the Ramani team help you complete fulfillment.</p></article>
+          <article><strong>Easy ordering</strong><p>Add what you need to a quote list, confirm your details, and let the Ramani team help you complete fulfillment.</p></article>
         </div>
       </section>
     </main>

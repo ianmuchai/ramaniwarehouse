@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const Stripe = require('stripe');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -118,13 +117,13 @@ async function saveCategories() {
 let categories = loadCategories();
 
 const defaultProducts = [
-  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board', price: 18500, description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Board', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 2, sku: 'RW-HDP-032', name: 'HDPE Plastics', price: 32000, description: 'Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.', category: 'HDPE Plastics', categoryId: 'hdpe-plastics', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', rating: 4.7, leadTime: '1-3 days', stock: 'Bulk ready', badge: 'Bulk supply', specs: ['Washed material', 'Manufacturing grade', 'Consistent batches'], gallery: ['https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 3, sku: 'RW-GLS-009', name: 'Sorted Glass Recycling', price: 9800, description: 'Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.', category: 'Glass Recycling', categoryId: 'glass-recycling', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', rating: 4.6, leadTime: '3-5 days', stock: 'Available', badge: 'Eco choice', specs: ['Sorted batches', 'Project quantities', 'Reuse ready'], gallery: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 4, sku: 'RW-PPR-145', name: 'PPR Pipes & Fittings', price: 14500, description: 'Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.', category: 'PPR Pipes & Fittings', categoryId: 'ppr-pipes-fittings', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', rating: 4.9, leadTime: 'Same week', stock: 'Fast moving', badge: 'Contractor pick', specs: ['Heat resistant', 'Low leakage fittings', 'Commercial grade'], gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 5, sku: 'RW-INT-072', name: 'Commercial Interior Design', price: 72000, description: 'A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.', category: 'Interior Design', categoryId: 'interior-design', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: 'Consult first', stock: 'Custom order', badge: 'Premium', specs: ['Material selection', 'Space planning', 'Finish schedule'], gallery: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 6, sku: 'RW-CLN-065', name: 'Industrial Detergent & Grease Solution', price: 6500, description: 'Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.', category: 'Detergent & Grease', categoryId: 'cleaning-solutions', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', rating: 4.5, leadTime: '1-2 days', stock: 'In stock', badge: 'Operations essential', specs: ['Heavy-duty clean', 'Bulk packs', 'Facility friendly'], gallery: ['https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'] },
-  { id: 7, sku: 'RW-FUR-021', name: 'Dining Room Set', price: 68500, description: 'A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.', category: 'Furniture', categoryId: 'furniture', image: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '5-10 days', stock: 'Made to order', badge: 'New arrival', specs: ['Dining table included', 'Matching chairs', 'Custom finishes available'], gallery: ['https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&w=1200&q=80'] }
+  { id: 1, sku: 'RW-ECO-018', name: 'Eco Board', price: 0, description: 'Recycled composite panels built for modern interior walls, partitions, ceiling accents, and commercial fit-outs.', category: 'Eco Board', categoryId: 'eco-boards', image: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '2-4 days', stock: 'In stock', badge: 'Best seller', specs: ['Moisture resistant', 'Easy to cut', 'Low waste installation'], gallery: ['https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 2, sku: 'RW-HDP-032', name: 'HDPE Plastics', price: 0, description: 'Premium recycled HDPE material prepared for manufacturing, packaging, moulding, and industrial production runs.', category: 'HDPE Plastics', categoryId: 'hdpe-plastics', image: 'https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', rating: 4.7, leadTime: '1-3 days', stock: 'Bulk ready', badge: 'Bulk supply', specs: ['Washed material', 'Manufacturing grade', 'Consistent batches'], gallery: ['https://images.unsplash.com/photo-1581093458791-9d5a6f8f580b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 3, sku: 'RW-GLS-009', name: 'Sorted Glass Recycling', price: 0, description: 'Sorted recycled glass for construction mixes, decor, reuse pipelines, and sustainable industrial applications.', category: 'Glass Recycling', categoryId: 'glass-recycling', image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', rating: 4.6, leadTime: '3-5 days', stock: 'Available', badge: 'Eco choice', specs: ['Sorted batches', 'Project quantities', 'Reuse ready'], gallery: ['https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 4, sku: 'RW-PPR-145', name: 'PPR Pipes & Fittings', price: 0, description: 'Durable plumbing kit for water systems, commercial installations, maintenance crews, and project contractors.', category: 'PPR Pipes & Fittings', categoryId: 'ppr-pipes-fittings', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', rating: 4.9, leadTime: 'Same week', stock: 'Fast moving', badge: 'Contractor pick', specs: ['Heat resistant', 'Low leakage fittings', 'Commercial grade'], gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 5, sku: 'RW-INT-072', name: 'Commercial Interior Design', price: 0, description: 'A curated fit-out package for offices, retail spaces, hospitality interiors, display walls, and customer-facing spaces.', category: 'Interior Design', categoryId: 'interior-design', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: 'Consult first', stock: 'Custom order', badge: 'Premium', specs: ['Material selection', 'Space planning', 'Finish schedule'], gallery: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 6, sku: 'RW-CLN-065', name: 'Industrial Detergent & Grease Solution', price: 0, description: 'Cleaning products for workshops, warehouses, hospitality backrooms, food handling zones, and hygiene-heavy environments.', category: 'Detergent & Grease', categoryId: 'cleaning-solutions', image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', rating: 4.5, leadTime: '1-2 days', stock: 'In stock', badge: 'Operations essential', specs: ['Heavy-duty clean', 'Bulk packs', 'Facility friendly'], gallery: ['https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=80'] },
+  { id: 7, sku: 'RW-FUR-021', name: 'Dining Room Set', price: 0, description: 'A polished dining table and chair set for homes, apartments, hospitality spaces, and furnished commercial suites.', category: 'Furniture', categoryId: 'furniture', image: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', rating: 4.8, leadTime: '5-10 days', stock: 'Made to order', badge: 'New arrival', specs: ['Dining table included', 'Matching chairs', 'Custom finishes available'], gallery: ['https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1604578762246-41134e37f9cc?auto=format&fit=crop&w=1200&q=80'] }
 ];
 
 
@@ -220,7 +219,7 @@ const siteProfile = {
   metrics: [
     { value: '7+', label: 'Core categories' },
     { value: '24h', label: 'Quote response' },
-    { value: 'KES', label: 'Local checkout' }
+    { value: 'Quote', label: 'Led sourcing' }
   ]
 };
 
@@ -327,12 +326,10 @@ function normalizeProduct(payload, existing = {}) {
   const category = categories.find((entry) => entry.name === categoryName || entry.id === payload.categoryId);
   const image = String(payload.image || existing.image || '').trim();
   const name = String(payload.name || existing.name || '').trim();
-  const price = Number(payload.price ?? existing.price ?? 0);
+  const price = 0;
 
   if (!name) return { error: 'Product name is required.' };
   if (!categoryName) return { error: 'Product category is required.' };
-  if (!Number.isFinite(price) || price < 0) return { error: 'A valid product price is required.' };
-
   return {
     ...existing,
     sku: String(payload.sku || existing.sku || `RW-${Date.now()}`).trim(),
@@ -635,30 +632,12 @@ app.post('/api/checkout', async (req, res) => {
   if (!cart.length) return res.status(400).json({ message: 'Cart is empty.' });
   if (!customer.name || !customer.email || !customer.address) return res.status(400).json({ message: 'Name, email, and delivery address are required.' });
 
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  if (stripeSecretKey) {
-    try {
-      const stripe = new Stripe(stripeSecretKey);
-      const lineItems = cart.map((item) => ({
-        price_data: { currency: 'kes', product_data: { name: item.name }, unit_amount: item.price },
-        quantity: item.quantity
-      }));
-      const session = await stripe.checkout.sessions.create({
-        mode: 'payment',
-        customer_email: customer.email,
-        success_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/?checkout=success`,
-        cancel_url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/?checkout=cancel`,
-        line_items: lineItems,
-        metadata: { customerName: customer.name || '', customerPhone: customer.phone || '', customerAddress: customer.address || '' }
-      });
-      return res.json({ url: session.url, orderId: session.id, paymentMode: 'stripe' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Stripe checkout could not be initialized.' });
-    }
-  }
-
-  return res.json({ url: null, orderId: `RW-${Date.now()}`, paymentMode: 'demo' });
+  return res.json({
+    url: null,
+    orderId: `QUOTE-${Date.now()}`,
+    mode: 'quote',
+    message: 'Quote request received. Ramani Warehouse will confirm availability, quantities, and fulfillment.'
+  });
 });
 
 app.use('/api', (error, req, res, next) => {
